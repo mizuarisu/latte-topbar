@@ -21,8 +21,15 @@ public partial class App : System.Windows.Application
 
         _settingsService.Load();
 
-        // A hidden message-only window purely to receive WM_HOTKEY
-        var parameters = new HwndSourceParameters("TopBarHotkeySink") { Width = 0, Height = 0 };
+        // A true message-only window (HWND_MESSAGE) purely to receive WM_HOTKEY —
+        // this must never become a real overlapped window or Windows draws chrome for it.
+        var parameters = new HwndSourceParameters("TopBarHotkeySink")
+        {
+            Width = 0,
+            Height = 0,
+            WindowStyle = 0, // no WS_VISIBLE, no title bar, no caption
+            ParentWindow = new IntPtr(-3) // HWND_MESSAGE
+        };
         _messageSource = new HwndSource(parameters);
         _hotkeyService.Initialize(_messageSource);
         _hotkeyService.Register(_settingsService.Current.HotkeyModifiers, _settingsService.Current.HotkeyKey);

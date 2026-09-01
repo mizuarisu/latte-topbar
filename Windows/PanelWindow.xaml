@@ -8,120 +8,173 @@
         ResizeMode="NoResize"
         ShowInTaskbar="False"
         Topmost="True"
-        Width="420" Height="480"
+        Width="440" Height="500"
         Visibility="Hidden"
-        FontFamily="Segoe UI"
+        FontFamily="Segoe UI Variable Display, Segoe UI"
+        xmlns:conv="clr-namespace:TopBar.Converters"
         Deactivated="OnDeactivated">
 
     <Window.Resources>
+        <conv:PercentToWidthMultiConverter x:Key="PercentToWidthConverter" />
+        <!-- Pill-shaped tab buttons, Material-You-ish selected state -->
         <Style x:Key="TabButtonStyle" TargetType="ToggleButton">
-            <Setter Property="Padding" Value="10,6" />
-            <Setter Property="Margin" Value="0,0,6,0" />
+            <Setter Property="Padding" Value="16,8" />
+            <Setter Property="Margin" Value="0,0,8,0" />
             <Setter Property="Background" Value="Transparent" />
-            <Setter Property="Foreground" Value="#7F849C" />
+            <Setter Property="Foreground" Value="#A6ADC8" />
             <Setter Property="BorderThickness" Value="0" />
-            <Setter Property="FontSize" Value="12" />
+            <Setter Property="FontSize" Value="12.5" />
+            <Setter Property="FontWeight" Value="Medium" />
+            <Setter Property="Cursor" Value="Hand" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="ToggleButton">
-                        <Border x:Name="Bg" CornerRadius="8" Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}">
+                        <Border x:Name="Bg" CornerRadius="20" Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}">
                             <ContentPresenter HorizontalAlignment="Center" />
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsChecked" Value="True">
-                                <Setter TargetName="Bg" Property="Background" Value="#313244" />
+                                <Setter TargetName="Bg" Property="Background" Value="#45475A" />
                                 <Setter Property="Foreground" Value="#CDD6F4" />
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Bg" Property="Background" Value="#2A2B3D" />
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
         </Style>
+
+        <!-- Rounded progress bars, matches Caelestia's soft pill meters -->
+        <Style x:Key="MeterBarStyle" TargetType="ProgressBar">
+            <Setter Property="Height" Value="10" />
+            <Setter Property="Minimum" Value="0" />
+            <Setter Property="Maximum" Value="100" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ProgressBar">
+                        <Grid>
+                            <Border CornerRadius="5" Background="{TemplateBinding Background}" />
+                            <Border CornerRadius="5" Background="{TemplateBinding Foreground}"
+                                    HorizontalAlignment="Left">
+                                <Border.Width>
+                                    <MultiBinding Converter="{StaticResource PercentToWidthConverter}">
+                                        <Binding Path="Value" RelativeSource="{RelativeSource TemplatedParent}" />
+                                        <Binding Path="ActualWidth" RelativeSource="{RelativeSource TemplatedParent}" />
+                                    </MultiBinding>
+                                </Border.Width>
+                            </Border>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Window.Resources>
 
-    <Border x:Name="RootBorder" CornerRadius="14" Padding="16" Background="#1E1E2E">
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
+    <Grid>
+        <!-- Soft drop shadow behind the card, matches the floating panel look -->
+        <Border CornerRadius="28" Background="#000000" Opacity="0.35" Margin="6,10,6,2" />
 
-            <!-- Tab strip -->
-            <StackPanel x:Name="TabStrip" Orientation="Horizontal" Grid.Row="0" Margin="0,0,0,12">
-                <ToggleButton x:Name="TabDashboard" Content="Dashboard" IsChecked="True"
-                              Style="{StaticResource TabButtonStyle}" Click="OnTabClick" Tag="Dashboard" />
-                <ToggleButton x:Name="TabMedia" Content="Media"
-                              Style="{StaticResource TabButtonStyle}" Click="OnTabClick" Tag="Media" />
-                <ToggleButton x:Name="TabPerformance" Content="Performance"
-                              Style="{StaticResource TabButtonStyle}" Click="OnTabClick" Tag="Performance" />
-                <ToggleButton x:Name="TabWeather" Content="Weather"
-                              Style="{StaticResource TabButtonStyle}" Click="OnTabClick" Tag="Weather" />
-            </StackPanel>
-
-            <!-- ===== Dashboard ===== -->
-            <Grid x:Name="DashboardPanel" Grid.Row="1">
-                <StackPanel VerticalAlignment="Top">
-                    <Border x:Name="PfpBorder" Width="72" Height="72" CornerRadius="36"
-                            Background="#313244" HorizontalAlignment="Center" Margin="0,4,0,12">
-                        <Image x:Name="PfpImage" Stretch="UniformToFill" />
-                    </Border>
-                    <TextBlock x:Name="ClockText" FontSize="34" FontWeight="SemiBold"
-                               Foreground="#CDD6F4" HorizontalAlignment="Center" Text="--:--:--" />
-                    <TextBlock x:Name="DateText" FontSize="14" Foreground="#7F849C"
-                               HorizontalAlignment="Center" Margin="0,4,0,0" Text="--" />
-                </StackPanel>
-            </Grid>
-
-            <!-- ===== Media ===== -->
-            <Grid x:Name="MediaPanel" Grid.Row="1" Visibility="Collapsed">
+        <Border x:Name="RootBorder" CornerRadius="26" Padding="22" Background="#1B1B29" BorderThickness="1" BorderBrush="#2A2B3D">
+            <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
 
-                <StackPanel Grid.Row="0" Margin="0,0,0,12">
-                    <TextBlock x:Name="MediaTitleText" FontSize="18" FontWeight="SemiBold"
-                               Foreground="#CDD6F4" TextTrimming="CharacterEllipsis" Text="Nothing playing" />
-                    <TextBlock x:Name="MediaArtistText" FontSize="13" Foreground="#7F849C"
-                               TextTrimming="CharacterEllipsis" Text="" />
+                <!-- Tab strip, pill container -->
+                <Border Grid.Row="0" Background="#232435" CornerRadius="22" Padding="4" Margin="0,0,0,18" HorizontalAlignment="Left">
+                    <StackPanel x:Name="TabStrip" Orientation="Horizontal">
+                        <ToggleButton x:Name="TabDashboard" Content="Dashboard" IsChecked="True"
+                                      Style="{StaticResource TabButtonStyle}" Click="OnTabClick" Tag="Dashboard" />
+                        <ToggleButton x:Name="TabMedia" Content="Media"
+                                      Style="{StaticResource TabButtonStyle}" Click="OnTabClick" Tag="Media" />
+                        <ToggleButton x:Name="TabPerformance" Content="Performance"
+                                      Style="{StaticResource TabButtonStyle}" Click="OnTabClick" Tag="Performance" />
+                        <ToggleButton x:Name="TabWeather" Content="Weather"
+                                      Style="{StaticResource TabButtonStyle}" Click="OnTabClick" Tag="Weather" />
+                    </StackPanel>
+                </Border>
+
+                <!-- ===== Dashboard ===== -->
+                <Grid x:Name="DashboardPanel" Grid.Row="1">
+                    <StackPanel VerticalAlignment="Top">
+                        <Border x:Name="PfpBorder" Width="84" Height="84" CornerRadius="42"
+                                Background="#2A2B3D" HorizontalAlignment="Center" Margin="0,8,0,18">
+                            <Image x:Name="PfpImage" Stretch="UniformToFill" />
+                        </Border>
+                        <TextBlock x:Name="ClockText" FontSize="46" FontWeight="SemiBold"
+                                   Foreground="#CDD6F4" HorizontalAlignment="Center" Text="--:--:--" />
+                        <TextBlock x:Name="DateText" FontSize="14" Foreground="#8B90A8"
+                                   HorizontalAlignment="Center" Margin="0,4,0,0" Text="--" />
+                    </StackPanel>
+                </Grid>
+
+                <!-- ===== Media ===== -->
+                <Grid x:Name="MediaPanel" Grid.Row="1" Visibility="Collapsed">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+
+                    <Border Grid.Row="0" Background="#232435" CornerRadius="18" Padding="16" Margin="0,0,0,14">
+                        <StackPanel>
+                            <TextBlock x:Name="MediaTitleText" FontSize="18" FontWeight="SemiBold"
+                                       Foreground="#CDD6F4" TextTrimming="CharacterEllipsis" Text="Nothing playing" />
+                            <TextBlock x:Name="MediaArtistText" FontSize="13" Foreground="#8B90A8"
+                                       Margin="0,2,0,0" TextTrimming="CharacterEllipsis" Text="" />
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Lyrics — only populated when the active session is Spotify -->
+                    <Border Grid.Row="1" Background="#232435" CornerRadius="18" Padding="16">
+                        <ScrollViewer VerticalScrollBarVisibility="Auto">
+                            <TextBlock x:Name="LyricsText" TextWrapping="Wrap" Foreground="#CDD6F4"
+                                       FontSize="13" LineHeight="20" Text="" />
+                        </ScrollViewer>
+                    </Border>
+                </Grid>
+
+                <!-- ===== Performance ===== -->
+                <StackPanel x:Name="PerformancePanel" Grid.Row="1" Visibility="Collapsed">
+                    <Border Background="#232435" CornerRadius="18" Padding="16">
+                        <StackPanel>
+                            <TextBlock Text="CPU" Foreground="#8B90A8" FontSize="12" Margin="0,0,0,6" />
+                            <ProgressBar x:Name="CpuBar" Style="{StaticResource MeterBarStyle}"
+                                         Foreground="#89B4FA" Background="#313244" />
+                            <TextBlock x:Name="CpuLabel" Foreground="#CDD6F4" FontSize="12" Margin="0,6,0,16" Text="0%" />
+
+                            <TextBlock Text="RAM" Foreground="#8B90A8" FontSize="12" Margin="0,0,0,6" />
+                            <ProgressBar x:Name="RamBar" Style="{StaticResource MeterBarStyle}"
+                                         Foreground="#A6E3A1" Background="#313244" />
+                            <TextBlock x:Name="RamLabel" Foreground="#CDD6F4" FontSize="12" Margin="0,6,0,16" Text="0%" />
+
+                            <TextBlock Text="Disk" Foreground="#8B90A8" FontSize="12" Margin="0,0,0,6" />
+                            <ProgressBar x:Name="DiskBar" Style="{StaticResource MeterBarStyle}"
+                                         Foreground="#F9E2AF" Background="#313244" />
+                            <TextBlock x:Name="DiskLabel" Foreground="#CDD6F4" FontSize="12" Margin="0,6,0,16" Text="0%" />
+
+                            <TextBlock Text="Network" Foreground="#8B90A8" FontSize="12" Margin="0,0,0,6" />
+                            <TextBlock x:Name="NetworkLabel" Foreground="#CDD6F4" FontSize="12" Text="↓ 0 KB/s  ↑ 0 KB/s" />
+                        </StackPanel>
+                    </Border>
                 </StackPanel>
 
-                <!-- Lyrics side panel — only populated when the active session is Spotify -->
-                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
-                    <TextBlock x:Name="LyricsText" TextWrapping="Wrap" Foreground="#CDD6F4"
-                               FontSize="13" LineHeight="20" Text="" />
-                </ScrollViewer>
+                <!-- ===== Weather ===== -->
+                <StackPanel x:Name="WeatherPanel" Grid.Row="1" Visibility="Collapsed">
+                    <Border Background="#232435" CornerRadius="18" Padding="20">
+                        <StackPanel>
+                            <TextBlock x:Name="WeatherLocationText" FontSize="14" Foreground="#8B90A8" Text="--" />
+                            <TextBlock x:Name="WeatherTempText" FontSize="48" FontWeight="SemiBold"
+                                       Foreground="#CDD6F4" Margin="0,10,0,0" Text="--°" />
+                            <TextBlock x:Name="WeatherDescText" FontSize="14" Foreground="#8B90A8" Text="--" />
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+
             </Grid>
-
-            <!-- ===== Performance ===== -->
-            <StackPanel x:Name="PerformancePanel" Grid.Row="1" Visibility="Collapsed">
-                <TextBlock Text="CPU" Foreground="#7F849C" FontSize="12" Margin="0,4,0,2" />
-                <ProgressBar x:Name="CpuBar" Height="10" Minimum="0" Maximum="100"
-                             Foreground="#89B4FA" Background="#313244" BorderThickness="0" />
-                <TextBlock x:Name="CpuLabel" Foreground="#CDD6F4" FontSize="12" Margin="0,2,0,10" Text="0%" />
-
-                <TextBlock Text="RAM" Foreground="#7F849C" FontSize="12" Margin="0,4,0,2" />
-                <ProgressBar x:Name="RamBar" Height="10" Minimum="0" Maximum="100"
-                             Foreground="#89B4FA" Background="#313244" BorderThickness="0" />
-                <TextBlock x:Name="RamLabel" Foreground="#CDD6F4" FontSize="12" Margin="0,2,0,10" Text="0%" />
-
-                <TextBlock Text="Disk" Foreground="#7F849C" FontSize="12" Margin="0,4,0,2" />
-                <ProgressBar x:Name="DiskBar" Height="10" Minimum="0" Maximum="100"
-                             Foreground="#89B4FA" Background="#313244" BorderThickness="0" />
-                <TextBlock x:Name="DiskLabel" Foreground="#CDD6F4" FontSize="12" Margin="0,2,0,10" Text="0%" />
-
-                <TextBlock Text="Network" Foreground="#7F849C" FontSize="12" Margin="0,4,0,2" />
-                <TextBlock x:Name="NetworkLabel" Foreground="#CDD6F4" FontSize="12" Text="↓ 0 KB/s  ↑ 0 KB/s" />
-            </StackPanel>
-
-            <!-- ===== Weather ===== -->
-            <StackPanel x:Name="WeatherPanel" Grid.Row="1" Visibility="Collapsed">
-                <TextBlock x:Name="WeatherLocationText" FontSize="14" Foreground="#7F849C" Text="--" />
-                <TextBlock x:Name="WeatherTempText" FontSize="40" FontWeight="SemiBold"
-                           Foreground="#CDD6F4" Margin="0,8,0,0" Text="--°" />
-                <TextBlock x:Name="WeatherDescText" FontSize="14" Foreground="#7F849C" Text="--" />
-            </StackPanel>
-
-        </Grid>
-    </Border>
+        </Border>
+    </Grid>
 </Window>
