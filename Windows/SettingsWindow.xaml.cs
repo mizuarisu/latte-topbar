@@ -49,7 +49,7 @@ public partial class SettingsWindow : Window
 
     private void OnBrowsePfp(object sender, RoutedEventArgs e)
     {
-        var dialog = new OpenFileDialog { Filter = "Image files|*.png;*.jpg;*.jpeg;*.bmp;*.gif" };
+        var dialog = new Microsoft.Win32.OpenFileDialog { Filter = "Image files|*.png;*.jpg;*.jpeg;*.bmp;*.gif" };
         if (dialog.ShowDialog() == true)
             PfpPathBox.Text = dialog.FileName;
     }
@@ -75,7 +75,7 @@ public partial class SettingsWindow : Window
         AutoStartService.SetEnabled(s.AutoStart);
 
         if (!_hotkey.Register(s.HotkeyModifiers, s.HotkeyKey))
-            MessageBox.Show(this, "That key combo couldn't be registered — it may already be in use by " +
+            System.Windows.MessageBox.Show(this, "That key combo couldn't be registered — it may already be in use by " +
                 "another app. Try a different key.", "Hotkey", MessageBoxButton.OK, MessageBoxImage.Warning);
 
         Close();
