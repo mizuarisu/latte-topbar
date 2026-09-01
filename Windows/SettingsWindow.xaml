@@ -1,0 +1,79 @@
+<Window x:Class="TopBar.Windows.SettingsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="TopBar Settings"
+        Width="380" SizeToContent="Height"
+        Background="#1E1E2E"
+        WindowStartupLocation="CenterScreen"
+        FontFamily="Segoe UI"
+        Foreground="#CDD6F4">
+
+    <StackPanel Margin="20">
+
+        <TextBlock Text="Hotkey" FontWeight="SemiBold" Margin="0,0,0,6" />
+        <TextBlock Text="Alt is fixed. Click the box, then press the key to pair with it." FontSize="11"
+                   Foreground="#7F849C" Margin="0,0,0,6" TextWrapping="Wrap" />
+        <TextBox x:Name="HotkeyBox" Text="Alt + Q" IsReadOnly="True" Padding="8"
+                 Background="#313244" BorderThickness="0" Foreground="#CDD6F4"
+                 PreviewKeyDown="OnHotkeyPreviewKeyDown" />
+
+        <CheckBox x:Name="AutoStartCheck" Content="Launch TopBar when Windows starts"
+                  Foreground="#CDD6F4" Margin="0,16,0,0" />
+
+        <TextBlock Text="Theme" FontWeight="SemiBold" Margin="0,20,0,6" />
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <StackPanel Grid.Column="0" Margin="0,0,6,0">
+                <TextBlock Text="Main" FontSize="11" Foreground="#7F849C" />
+                <TextBox x:Name="MainColorBox" Padding="6" Background="#313244" BorderThickness="0" Foreground="#CDD6F4" />
+            </StackPanel>
+            <StackPanel Grid.Column="1" Margin="0,0,6,0">
+                <TextBlock Text="Secondary" FontSize="11" Foreground="#7F849C" />
+                <TextBox x:Name="SecondaryColorBox" Padding="6" Background="#313244" BorderThickness="0" Foreground="#CDD6F4" />
+            </StackPanel>
+            <StackPanel Grid.Column="2">
+                <TextBlock Text="Accent" FontSize="11" Foreground="#7F849C" />
+                <TextBox x:Name="TertiaryColorBox" Padding="6" Background="#313244" BorderThickness="0" Foreground="#CDD6F4" />
+            </StackPanel>
+        </Grid>
+        <TextBlock Text="Hex codes, e.g. #1E1E2E" FontSize="10" Foreground="#7F849C" Margin="0,4,0,0" />
+
+        <TextBlock Text="Profile picture" FontWeight="SemiBold" Margin="0,20,0,6" />
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <TextBox x:Name="PfpPathBox" Grid.Column="0" IsReadOnly="True" Padding="8"
+                     Background="#313244" BorderThickness="0" Foreground="#CDD6F4" />
+            <Button Grid.Column="1" Content="Browse…" Margin="6,0,0,0" Padding="10,4"
+                    Click="OnBrowsePfp" />
+        </Grid>
+
+        <TextBlock Text="Weather location" FontWeight="SemiBold" Margin="0,20,0,6" />
+        <TextBox x:Name="WeatherLabelBox" Padding="8" Background="#313244" BorderThickness="0"
+                 Foreground="#CDD6F4" Margin="0,0,0,6" />
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <StackPanel Grid.Column="0" Margin="0,0,6,0">
+                <TextBlock Text="Latitude" FontSize="11" Foreground="#7F849C" />
+                <TextBox x:Name="LatBox" Padding="6" Background="#313244" BorderThickness="0" Foreground="#CDD6F4" />
+            </StackPanel>
+            <StackPanel Grid.Column="1">
+                <TextBlock Text="Longitude" FontSize="11" Foreground="#7F849C" />
+                <TextBox x:Name="LonBox" Padding="6" Background="#313244" BorderThickness="0" Foreground="#CDD6F4" />
+            </StackPanel>
+        </Grid>
+        <CheckBox x:Name="FahrenheitCheck" Content="Show °F instead of °C" Foreground="#CDD6F4" Margin="0,8,0,0" />
+
+        <Button Content="Save" Margin="0,24,0,0" Padding="0,10" Click="OnSave"
+                Background="#89B4FA" Foreground="#1E1E2E" BorderThickness="0" FontWeight="SemiBold" />
+    </StackPanel>
+</Window>
