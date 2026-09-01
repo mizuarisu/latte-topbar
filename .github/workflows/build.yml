@@ -1,0 +1,28 @@
+name: Build standalone TopBar.exe
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch: {}
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up .NET 8 SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Publish self-contained single-file exe
+        run: dotnet publish TopBar.csproj -c Release -r win-x64 --self-contained true -o publish
+
+      - name: Upload exe as build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: TopBar-windows-x64
+          path: publish/TopBar.exe
