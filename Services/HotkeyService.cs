@@ -3,7 +3,7 @@ using System.Windows.Interop;
 
 namespace TopBar.Services;
 
-internal sealed class HotkeyService : IDisposable
+public sealed class HotkeyService : IDisposable
 {
     private const int HotkeyId = 0xB00F;
     private HwndSource? _source;

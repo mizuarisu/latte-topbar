@@ -4,7 +4,7 @@ using TopBar.Models;
 
 namespace TopBar.Services;
 
-internal sealed class SettingsService
+public sealed class SettingsService
 {
     private static readonly string Dir = Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "TopBar");

@@ -31,7 +31,7 @@ public partial class SettingsWindow : Window
         FahrenheitCheck.IsChecked = s.WeatherFahrenheit;
     }
 
-    private void OnHotkeyPreviewKeyDown(object sender, KeyEventArgs e)
+    private void OnHotkeyPreviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
     {
         // Ignore bare modifier presses — we're capturing the non-modifier key that pairs with Alt
         var key = e.Key == Key.System ? e.SystemKey : e.Key;
