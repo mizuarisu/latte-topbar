@@ -1,6 +1,7 @@
 <Window x:Class="TopBar.Windows.PanelWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:conv="clr-namespace:TopBar.Converters"
         Title="TopBar"
         WindowStyle="None"
         AllowsTransparency="True"
@@ -8,17 +9,16 @@
         ResizeMode="NoResize"
         ShowInTaskbar="False"
         Topmost="True"
-        Width="440" Height="500"
+        Width="800" Height="470"
         Visibility="Hidden"
-        FontFamily="Segoe UI Variable Display, Segoe UI"
-        xmlns:conv="clr-namespace:TopBar.Converters"
+        FontFamily="Inter, Segoe UI Variable Display, Segoe UI"
         Deactivated="OnDeactivated">
 
     <Window.Resources>
         <conv:PercentToWidthMultiConverter x:Key="PercentToWidthConverter" />
-        <!-- Pill-shaped tab buttons, Material-You-ish selected state -->
+
         <Style x:Key="TabButtonStyle" TargetType="ToggleButton">
-            <Setter Property="Padding" Value="16,8" />
+            <Setter Property="Padding" Value="18,8" />
             <Setter Property="Margin" Value="0,0,8,0" />
             <Setter Property="Background" Value="Transparent" />
             <Setter Property="Foreground" Value="#A6ADC8" />
@@ -46,133 +46,250 @@
             </Setter>
         </Style>
 
-        <!-- Rounded progress bars, matches Caelestia's soft pill meters -->
-        <Style x:Key="MeterBarStyle" TargetType="ProgressBar">
-            <Setter Property="Height" Value="10" />
-            <Setter Property="Minimum" Value="0" />
-            <Setter Property="Maximum" Value="100" />
+        <!-- Round icon buttons: prev/next/shuffle/repeat/play -->
+        <Style x:Key="RoundIconButton" TargetType="Button">
+            <Setter Property="Width" Value="38" />
+            <Setter Property="Height" Value="38" />
+            <Setter Property="Background" Value="#2A2B3D" />
+            <Setter Property="Foreground" Value="#CDD6F4" />
             <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="Cursor" Value="Hand" />
             <Setter Property="Template">
                 <Setter.Value>
-                    <ControlTemplate TargetType="ProgressBar">
-                        <Grid>
-                            <Border CornerRadius="5" Background="{TemplateBinding Background}" />
-                            <Border CornerRadius="5" Background="{TemplateBinding Foreground}"
-                                    HorizontalAlignment="Left">
-                                <Border.Width>
-                                    <MultiBinding Converter="{StaticResource PercentToWidthConverter}">
-                                        <Binding Path="Value" RelativeSource="{RelativeSource TemplatedParent}" />
-                                        <Binding Path="ActualWidth" RelativeSource="{RelativeSource TemplatedParent}" />
-                                    </MultiBinding>
-                                </Border.Width>
-                            </Border>
-                        </Grid>
+                    <ControlTemplate TargetType="Button">
+                        <Border CornerRadius="19" Background="{TemplateBinding Background}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
         </Style>
+
+        <Style x:Key="PlayButton" TargetType="Button" BasedOn="{StaticResource RoundIconButton}">
+            <Setter Property="Width" Value="52" />
+            <Setter Property="Height" Value="52" />
+            <Setter Property="Background" Value="#89B4FA" />
+            <Setter Property="Foreground" Value="#1B1B29" />
+            <Setter Property="FontSize" Value="18" />
+        </Style>
+
+        <Style x:Key="ToggleIconButton" TargetType="ToggleButton">
+            <Setter Property="Width" Value="34" />
+            <Setter Property="Height" Value="34" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Foreground" Value="#8B90A8" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="FontSize" Value="13" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ToggleButton">
+                        <Border x:Name="Bg" CornerRadius="17" Background="{TemplateBinding Background}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="Bg" Property="Background" Value="#313244" />
+                                <Setter Property="Foreground" Value="#89B4FA" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="CardStyle" TargetType="Border">
+            <Setter Property="Background" Value="#232435" />
+            <Setter Property="CornerRadius" Value="18" />
+            <Setter Property="Padding" Value="14" />
+        </Style>
     </Window.Resources>
 
     <Grid>
-        <!-- Soft drop shadow behind the card, matches the floating panel look -->
         <Border CornerRadius="28" Background="#000000" Opacity="0.35" Margin="6,10,6,2" />
 
-        <Border x:Name="RootBorder" CornerRadius="26" Padding="22" Background="#1B1B29" BorderThickness="1" BorderBrush="#2A2B3D">
+        <Border x:Name="RootBorder" CornerRadius="26" Padding="20" Background="#1B1B29" BorderThickness="1" BorderBrush="#2A2B3D">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
 
-                <!-- Tab strip, pill container -->
-                <Border Grid.Row="0" Background="#232435" CornerRadius="22" Padding="4" Margin="0,0,0,18" HorizontalAlignment="Left">
-                    <StackPanel x:Name="TabStrip" Orientation="Horizontal">
+                <Border Grid.Row="0" Background="#232435" CornerRadius="22" Padding="4" Margin="0,0,0,16" HorizontalAlignment="Left">
+                    <StackPanel Orientation="Horizontal">
                         <ToggleButton x:Name="TabDashboard" Content="Dashboard" IsChecked="True"
                                       Style="{StaticResource TabButtonStyle}" Click="OnTabClick" Tag="Dashboard" />
                         <ToggleButton x:Name="TabMedia" Content="Media"
                                       Style="{StaticResource TabButtonStyle}" Click="OnTabClick" Tag="Media" />
-                        <ToggleButton x:Name="TabPerformance" Content="Performance"
-                                      Style="{StaticResource TabButtonStyle}" Click="OnTabClick" Tag="Performance" />
-                        <ToggleButton x:Name="TabWeather" Content="Weather"
-                                      Style="{StaticResource TabButtonStyle}" Click="OnTabClick" Tag="Weather" />
                     </StackPanel>
                 </Border>
 
-                <!-- ===== Dashboard ===== -->
+                <!-- ===================== DASHBOARD ===================== -->
                 <Grid x:Name="DashboardPanel" Grid.Row="1">
-                    <StackPanel VerticalAlignment="Top">
-                        <Border x:Name="PfpBorder" Width="84" Height="84" CornerRadius="42"
-                                Background="#2A2B3D" HorizontalAlignment="Center" Margin="0,8,0,18">
-                            <Image x:Name="PfpImage" Stretch="UniformToFill" />
-                        </Border>
-                        <TextBlock x:Name="ClockText" FontSize="46" FontWeight="SemiBold"
-                                   Foreground="#CDD6F4" HorizontalAlignment="Center" Text="--:--:--" />
-                        <TextBlock x:Name="DateText" FontSize="14" Foreground="#8B90A8"
-                                   HorizontalAlignment="Center" Margin="0,4,0,0" Text="--" />
-                    </StackPanel>
-                </Grid>
-
-                <!-- ===== Media ===== -->
-                <Grid x:Name="MediaPanel" Grid.Row="1" Visibility="Collapsed">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="190" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="190" />
+                    </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="120" />
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
 
-                    <Border Grid.Row="0" Background="#232435" CornerRadius="18" Padding="16" Margin="0,0,0,14">
-                        <StackPanel>
-                            <TextBlock x:Name="MediaTitleText" FontSize="18" FontWeight="SemiBold"
-                                       Foreground="#CDD6F4" TextTrimming="CharacterEllipsis" Text="Nothing playing" />
-                            <TextBlock x:Name="MediaArtistText" FontSize="13" Foreground="#8B90A8"
-                                       Margin="0,2,0,0" TextTrimming="CharacterEllipsis" Text="" />
+                    <!-- Weather -->
+                    <Border Grid.Row="0" Grid.Column="0" Style="{StaticResource CardStyle}" Margin="0,0,12,12">
+                        <StackPanel VerticalAlignment="Center">
+                            <TextBlock x:Name="WeatherIconText" FontSize="26" Text="⛅" />
+                            <TextBlock x:Name="WeatherTempText" FontSize="26" FontWeight="SemiBold"
+                                       Foreground="#CDD6F4" Margin="0,4,0,0" Text="--°" />
+                            <TextBlock x:Name="WeatherDescText" FontSize="12" Foreground="#8B90A8" Text="--" />
                         </StackPanel>
                     </Border>
 
-                    <!-- Lyrics — only populated when the active session is Spotify -->
-                    <Border Grid.Row="1" Background="#232435" CornerRadius="18" Padding="16">
-                        <ScrollViewer VerticalScrollBarVisibility="Auto">
-                            <TextBlock x:Name="LyricsText" TextWrapping="Wrap" Foreground="#CDD6F4"
-                                       FontSize="13" LineHeight="20" Text="" />
-                        </ScrollViewer>
+                    <!-- Profile / uptime -->
+                    <Border Grid.Row="0" Grid.Column="1" Style="{StaticResource CardStyle}" Margin="0,0,12,12">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <Border Width="52" Height="52" CornerRadius="26" Background="#2A2B3D">
+                                <Image x:Name="PfpImage" Stretch="UniformToFill" />
+                            </Border>
+                            <StackPanel Margin="14,0,0,0" VerticalAlignment="Center">
+                                <TextBlock x:Name="ProfileNameText" FontSize="15" FontWeight="SemiBold" Foreground="#CDD6F4" Text="--" />
+                                <TextBlock x:Name="UptimeText" FontSize="12" Foreground="#8B90A8" Margin="0,3,0,0" Text="up --" />
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Media (lite) -->
+                    <Border Grid.Row="0" Grid.RowSpan="2" Grid.Column="2" Style="{StaticResource CardStyle}" Margin="0,0,0,0">
+                        <StackPanel>
+                            <Border Width="90" Height="90" CornerRadius="14" Background="#2A2B3D" HorizontalAlignment="Center">
+                                <Image x:Name="LiteAlbumImage" Stretch="UniformToFill" />
+                            </Border>
+                            <TextBlock x:Name="LiteTitleText" FontSize="13" FontWeight="SemiBold" Foreground="#CDD6F4"
+                                       HorizontalAlignment="Center" Margin="0,10,0,0" TextTrimming="CharacterEllipsis" Text="No media" />
+                            <TextBlock x:Name="LiteArtistText" FontSize="11" Foreground="#8B90A8"
+                                       HorizontalAlignment="Center" Margin="0,2,0,12" TextTrimming="CharacterEllipsis" Text="" />
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                <Button Content="⏮" Style="{StaticResource RoundIconButton}" Width="30" Height="30" Margin="0,0,6,0" Click="OnPrevClick" />
+                                <Button x:Name="LitePlayButton" Content="▶" Style="{StaticResource RoundIconButton}" Width="30" Height="30" Margin="0,0,6,0" Click="OnPlayPauseClick" />
+                                <Button Content="⏭" Style="{StaticResource RoundIconButton}" Width="30" Height="30" Click="OnNextClick" />
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Clock / date -->
+                    <Border Grid.Row="1" Grid.Column="0" Style="{StaticResource CardStyle}" Margin="0,0,12,0">
+                        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                            <TextBlock x:Name="ClockText" FontSize="36" FontWeight="SemiBold"
+                                       Foreground="#CDD6F4" HorizontalAlignment="Center" Text="--:--" />
+                            <TextBlock x:Name="AmPmText" FontSize="13" Foreground="#8B90A8" HorizontalAlignment="Center" Text="--" />
+                            <TextBlock x:Name="DateText" FontSize="12" Foreground="#8B90A8"
+                                       HorizontalAlignment="Center" Margin="0,10,0,0" Text="--" />
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Calendar -->
+                    <Border Grid.Row="1" Grid.Column="1" Style="{StaticResource CardStyle}" Margin="0,0,12,0">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+
+                            <Grid Grid.Row="0" Margin="2,0,2,10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <Button Grid.Column="0" Content="‹" Click="OnCalendarPrev"
+                                        Style="{StaticResource RoundIconButton}" Width="26" Height="26" FontSize="13" />
+                                <TextBlock x:Name="CalendarMonthText" Grid.Column="1" HorizontalAlignment="Center"
+                                           VerticalAlignment="Center" FontWeight="SemiBold" Foreground="#CDD6F4" Text="--" />
+                                <Button Grid.Column="2" Content="›" Click="OnCalendarNext"
+                                        Style="{StaticResource RoundIconButton}" Width="26" Height="26" FontSize="13" />
+                            </Grid>
+
+                            <UniformGrid x:Name="CalendarWeekdayHeader" Grid.Row="1" Columns="7" Margin="0,0,0,4" />
+                            <UniformGrid x:Name="CalendarDaysGrid" Grid.Row="2" Columns="7" Rows="6" />
+                        </Grid>
                     </Border>
                 </Grid>
 
-                <!-- ===== Performance ===== -->
-                <StackPanel x:Name="PerformancePanel" Grid.Row="1" Visibility="Collapsed">
-                    <Border Background="#232435" CornerRadius="18" Padding="16">
-                        <StackPanel>
-                            <TextBlock Text="CPU" Foreground="#8B90A8" FontSize="12" Margin="0,0,0,6" />
-                            <ProgressBar x:Name="CpuBar" Style="{StaticResource MeterBarStyle}"
-                                         Foreground="#89B4FA" Background="#313244" />
-                            <TextBlock x:Name="CpuLabel" Foreground="#CDD6F4" FontSize="12" Margin="0,6,0,16" Text="0%" />
+                <!-- ===================== MEDIA ===================== -->
+                <Grid x:Name="MediaTabPanel" Grid.Row="1" Visibility="Collapsed">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="270" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
 
-                            <TextBlock Text="RAM" Foreground="#8B90A8" FontSize="12" Margin="0,0,0,6" />
-                            <ProgressBar x:Name="RamBar" Style="{StaticResource MeterBarStyle}"
-                                         Foreground="#A6E3A1" Background="#313244" />
-                            <TextBlock x:Name="RamLabel" Foreground="#CDD6F4" FontSize="12" Margin="0,6,0,16" Text="0%" />
+                    <!-- Album art + visualizer ring + controls -->
+                    <StackPanel Grid.Column="0" Margin="0,0,16,0">
+                        <Grid x:Name="VisualizerHost" Width="220" Height="220" HorizontalAlignment="Center">
+                            <Canvas x:Name="VisualizerCanvas" Width="220" Height="220" />
+                            <Border Width="150" Height="150" CornerRadius="24" Background="#2A2B3D"
+                                    HorizontalAlignment="Center" VerticalAlignment="Center" ClipToBounds="True">
+                                <Image x:Name="AlbumImage" Stretch="UniformToFill" />
+                            </Border>
+                        </Grid>
 
-                            <TextBlock Text="Disk" Foreground="#8B90A8" FontSize="12" Margin="0,0,0,6" />
-                            <ProgressBar x:Name="DiskBar" Style="{StaticResource MeterBarStyle}"
-                                         Foreground="#F9E2AF" Background="#313244" />
-                            <TextBlock x:Name="DiskLabel" Foreground="#CDD6F4" FontSize="12" Margin="0,6,0,16" Text="0%" />
+                        <TextBlock x:Name="MediaTitleText" FontSize="17" FontWeight="SemiBold" Foreground="#CDD6F4"
+                                   HorizontalAlignment="Center" Margin="0,14,0,0" TextTrimming="CharacterEllipsis" Text="Nothing playing" />
+                        <TextBlock x:Name="MediaArtistText" FontSize="12" Foreground="#8B90A8"
+                                   HorizontalAlignment="Center" Margin="0,2,0,0" TextTrimming="CharacterEllipsis" Text="" />
+                        <TextBlock x:Name="MediaAlbumText" FontSize="11" Foreground="#5C6079"
+                                   HorizontalAlignment="Center" Margin="0,1,0,10" TextTrimming="CharacterEllipsis" Text="" />
 
-                            <TextBlock Text="Network" Foreground="#8B90A8" FontSize="12" Margin="0,0,0,6" />
-                            <TextBlock x:Name="NetworkLabel" Foreground="#CDD6F4" FontSize="12" Text="↓ 0 KB/s  ↑ 0 KB/s" />
+                        <Grid Margin="4,0,4,10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock x:Name="PositionText" Grid.Column="0" FontSize="10" Foreground="#8B90A8" Text="0:00" />
+                            <Border x:Name="ProgressTrack" Grid.Column="1" Height="4" CornerRadius="2" Background="#313244"
+                                    Margin="8,0,8,0" VerticalAlignment="Center">
+                                <Border x:Name="ProgressFillBar" CornerRadius="2" Background="#89B4FA"
+                                        HorizontalAlignment="Left" Width="0" />
+                            </Border>
+                            <TextBlock x:Name="DurationText" Grid.Column="2" FontSize="10" Foreground="#8B90A8" Text="0:00" />
+                        </Grid>
+
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                            <ToggleButton x:Name="ShuffleButton" Content="🔀" Style="{StaticResource ToggleIconButton}" Margin="0,0,8,0" Click="OnShuffleClick" />
+                            <Button Content="⏮" Style="{StaticResource RoundIconButton}" Margin="0,0,8,0" Click="OnPrevClick" />
+                            <Button x:Name="PlayPauseButton" Content="▶" Style="{StaticResource PlayButton}" Margin="0,0,8,0" Click="OnPlayPauseClick" />
+                            <Button Content="⏭" Style="{StaticResource RoundIconButton}" Margin="0,0,8,0" Click="OnNextClick" />
+                            <ToggleButton x:Name="RepeatButton" Content="🔁" Style="{StaticResource ToggleIconButton}" Click="OnRepeatClick" />
                         </StackPanel>
-                    </Border>
-                </StackPanel>
+                    </StackPanel>
 
-                <!-- ===== Weather ===== -->
-                <StackPanel x:Name="WeatherPanel" Grid.Row="1" Visibility="Collapsed">
-                    <Border Background="#232435" CornerRadius="18" Padding="20">
-                        <StackPanel>
-                            <TextBlock x:Name="WeatherLocationText" FontSize="14" Foreground="#8B90A8" Text="--" />
-                            <TextBlock x:Name="WeatherTempText" FontSize="48" FontWeight="SemiBold"
-                                       Foreground="#CDD6F4" Margin="0,10,0,0" Text="--°" />
-                            <TextBlock x:Name="WeatherDescText" FontSize="14" Foreground="#8B90A8" Text="--" />
-                        </StackPanel>
+                    <!-- Lyrics -->
+                    <Border Grid.Column="1" Style="{StaticResource CardStyle}">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+
+                            <TextBlock Grid.Row="0" Text="Lyrics" FontWeight="SemiBold" FontSize="14"
+                                       Foreground="#CDD6F4" Margin="2,0,0,10" />
+
+                            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                                <TextBlock x:Name="LyricsText" TextWrapping="Wrap" Foreground="#A6ADC8"
+                                           FontSize="13" LineHeight="21" Text="" />
+                            </ScrollViewer>
+
+                            <Border x:Name="SpotifyBadge" Grid.Row="2" Background="#1DB95422" CornerRadius="14"
+                                    Padding="10,5" HorizontalAlignment="Left" Margin="0,10,0,0" Visibility="Collapsed">
+                                <TextBlock Text="Spotify" FontSize="11" FontWeight="SemiBold" Foreground="#1DB954" />
+                            </Border>
+                        </Grid>
                     </Border>
-                </StackPanel>
+                </Grid>
 
             </Grid>
         </Border>
