@@ -3,6 +3,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Windows.Threading;
@@ -51,10 +52,54 @@ public partial class PanelWindow : Window
 
     // ---------- Visibility / positioning ----------
 
+    private bool _isAnimating;
+
     public void Toggle()
     {
-        if (Visibility == Visibility.Visible) { Hide(); }
-        else { PositionTopCenter(); Show(); Activate(); }
+        if (_isAnimating) return;
+
+        if (Visibility == Visibility.Visible) AnimateOut();
+        else AnimateIn();
+    }
+
+    private void AnimateIn()
+    {
+        PositionTopCenter();
+        _isAnimating = true;
+
+        Opacity = 0;
+        PanelScale.ScaleX = PanelScale.ScaleY = 0.94;
+        PanelTranslate.Y = -14;
+
+        Show();
+        Activate();
+
+        var duration = TimeSpan.FromMilliseconds(190);
+        var ease = new QuadraticEase { EasingMode = EasingMode.EaseOut };
+
+        var fadeIn = new DoubleAnimation(0, 1, duration) { EasingFunction = ease };
+        fadeIn.Completed += (_, _) => _isAnimating = false;
+
+        BeginAnimation(OpacityProperty, fadeIn);
+        PanelScale.BeginAnimation(ScaleTransform.ScaleXProperty, new DoubleAnimation(0.94, 1, duration) { EasingFunction = ease });
+        PanelScale.BeginAnimation(ScaleTransform.ScaleYProperty, new DoubleAnimation(0.94, 1, duration) { EasingFunction = ease });
+        PanelTranslate.BeginAnimation(TranslateTransform.YProperty, new DoubleAnimation(-14, 0, duration) { EasingFunction = ease });
+    }
+
+    private void AnimateOut()
+    {
+        _isAnimating = true;
+
+        var duration = TimeSpan.FromMilliseconds(150);
+        var ease = new QuadraticEase { EasingMode = EasingMode.EaseIn };
+
+        var fadeOut = new DoubleAnimation(1, 0, duration) { EasingFunction = ease };
+        fadeOut.Completed += (_, _) => { Hide(); _isAnimating = false; };
+
+        BeginAnimation(OpacityProperty, fadeOut);
+        PanelScale.BeginAnimation(ScaleTransform.ScaleXProperty, new DoubleAnimation(1, 0.94, duration) { EasingFunction = ease });
+        PanelScale.BeginAnimation(ScaleTransform.ScaleYProperty, new DoubleAnimation(1, 0.94, duration) { EasingFunction = ease });
+        PanelTranslate.BeginAnimation(TranslateTransform.YProperty, new DoubleAnimation(0, -10, duration) { EasingFunction = ease });
     }
 
     private void PositionTopCenter()
@@ -63,7 +108,10 @@ public partial class PanelWindow : Window
         Top = 8;
     }
 
-    private void OnDeactivated(object sender, EventArgs e) => Hide();
+    private void OnDeactivated(object sender, EventArgs e)
+    {
+        if (Visibility == Visibility.Visible) AnimateOut();
+    }
 
     // ---------- Theme ----------
 

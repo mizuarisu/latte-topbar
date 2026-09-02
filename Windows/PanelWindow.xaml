@@ -58,9 +58,17 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
-                        <Border CornerRadius="19" Background="{TemplateBinding Background}">
+                        <Border x:Name="Bg" CornerRadius="19" Background="{TemplateBinding Background}">
                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                         </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Bg" Property="Background" Value="#363752" />
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="Bg" Property="Background" Value="#45475A" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
@@ -72,6 +80,23 @@
             <Setter Property="Background" Value="#89B4FA" />
             <Setter Property="Foreground" Value="#1B1B29" />
             <Setter Property="FontSize" Value="18" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="Bg" CornerRadius="26" Background="{TemplateBinding Background}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Bg" Property="Background" Value="#A5C6FB" />
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="Bg" Property="Background" Value="#749EE8" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
         </Style>
 
         <Style x:Key="ToggleIconButton" TargetType="ToggleButton">
@@ -93,6 +118,9 @@
                                 <Setter TargetName="Bg" Property="Background" Value="#313244" />
                                 <Setter Property="Foreground" Value="#89B4FA" />
                             </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Bg" Property="Background" Value="#2A2B3D" />
+                            </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
@@ -103,13 +131,23 @@
             <Setter Property="Background" Value="#232435" />
             <Setter Property="CornerRadius" Value="18" />
             <Setter Property="Padding" Value="14" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="BorderBrush" Value="#2A2B3D" />
         </Style>
     </Window.Resources>
 
     <Grid>
-        <Border CornerRadius="28" Background="#000000" Opacity="0.35" Margin="6,10,6,2" />
-
-        <Border x:Name="RootBorder" CornerRadius="26" Padding="20" Background="#1B1B29" BorderThickness="1" BorderBrush="#2A2B3D">
+        <Border x:Name="RootBorder" CornerRadius="26" Padding="20" Background="#1B1B29" BorderThickness="1" BorderBrush="#2E2F45"
+                RenderTransformOrigin="0.5,0.5">
+            <Border.Effect>
+                <DropShadowEffect Color="Black" Opacity="0.45" BlurRadius="36" ShadowDepth="10" Direction="270" />
+            </Border.Effect>
+            <Border.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform x:Name="PanelScale" ScaleX="1" ScaleY="1" />
+                    <TranslateTransform x:Name="PanelTranslate" Y="0" />
+                </TransformGroup>
+            </Border.RenderTransform>
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
