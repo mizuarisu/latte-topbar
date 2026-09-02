@@ -19,7 +19,7 @@ public partial class PanelWindow : Window
 
     private DateTime _calendarMonth = new(DateTime.Today.Year, DateTime.Today.Month, 1);
     private string _lastLyricsKey = "";
-    private readonly List<Rectangle> _visualizerBars = new();
+    private readonly List<System.Windows.Shapes.Rectangle> _visualizerBars = new();
     private readonly Random _rng = new();
 
     public PanelWindow(SettingsService settings)
@@ -339,7 +339,7 @@ public partial class PanelWindow : Window
         for (int i = 0; i < barCount; i++)
         {
             double angle = i * (360.0 / barCount) * Math.PI / 180.0;
-            var bar = new Rectangle
+            var bar = new System.Windows.Shapes.Rectangle
             {
                 Width = 3,
                 Height = 6,
