@@ -150,7 +150,6 @@
             <Setter Property="FontSize" Value="10.5" />
             <Setter Property="Foreground" Value="{StaticResource TextFaintBrush}" />
             <Setter Property="FontWeight" Value="SemiBold" />
-            <Setter Property="TextElement.CharacterSpacing" Value="40" />
             <Setter Property="HorizontalAlignment" Value="Center" />
         </Style>
 
@@ -159,7 +158,6 @@
             <Setter Property="FontSize" Value="11" />
             <Setter Property="Foreground" Value="{StaticResource TextMutedBrush}" />
             <Setter Property="FontWeight" Value="SemiBold" />
-            <Setter Property="TextElement.CharacterSpacing" Value="30" />
             <Setter Property="Margin" Value="2,0,0,8" />
         </Style>
 

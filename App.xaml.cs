@@ -36,6 +36,7 @@ public partial class App : System.Windows.Application
         _hotkeyService.Pressed += () => _panel?.Toggle();
 
         _panel = new PanelWindow(_settingsService);
+        _panel.SettingsRequested += OpenSettings;
 
         SetupTrayIcon();
     }

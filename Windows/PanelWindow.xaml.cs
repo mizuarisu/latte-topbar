@@ -14,6 +14,8 @@ namespace TopBar.Windows;
 
 public partial class PanelWindow : Window
 {
+    public event Action? SettingsRequested;
+
     private readonly SettingsService _settings;
     private readonly WeatherService _weather = new();
     private readonly MediaService _media = new();
@@ -132,6 +134,8 @@ public partial class PanelWindow : Window
         try { return (SolidColorBrush)new BrushConverter().ConvertFromString(hex)!; }
         catch { return System.Windows.Media.Brushes.Gray; }
     }
+
+    private void OnSettingsClick(object sender, RoutedEventArgs e) => SettingsRequested?.Invoke();
 
     // ---------- Tabs ----------
 

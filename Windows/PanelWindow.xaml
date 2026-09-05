@@ -31,15 +31,23 @@
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
 
-                <!-- Tab strip now spans the full width, split evenly between the two tabs -->
-                <Border Grid.Row="0" Background="#232435" CornerRadius="20" Padding="4" Margin="0,0,0,16">
-                    <UniformGrid Columns="2">
-                        <ToggleButton x:Name="TabDashboard" Content="Dashboard" IsChecked="True"
-                                      Style="{StaticResource TabButtonStyle}" Click="OnTabClick" Tag="Dashboard" />
-                        <ToggleButton x:Name="TabMedia" Content="Media"
-                                      Style="{StaticResource TabButtonStyle}" Click="OnTabClick" Tag="Media" />
-                    </UniformGrid>
-                </Border>
+                <!-- Tab strip spans the full width, split evenly; a settings gear sits beside it -->
+                <Grid Grid.Row="0" Margin="0,0,0,16">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <Border Grid.Column="0" Background="#232435" CornerRadius="20" Padding="4">
+                        <UniformGrid Columns="2">
+                            <ToggleButton x:Name="TabDashboard" Content="Dashboard" IsChecked="True"
+                                          Style="{StaticResource TabButtonStyle}" Click="OnTabClick" Tag="Dashboard" />
+                            <ToggleButton x:Name="TabMedia" Content="Media"
+                                          Style="{StaticResource TabButtonStyle}" Click="OnTabClick" Tag="Media" />
+                        </UniformGrid>
+                    </Border>
+                    <Button Grid.Column="1" Content="&#xE713;" Style="{StaticResource RoundIconButton}"
+                            Margin="10,0,0,0" Click="OnSettingsClick" ToolTip="Settings" />
+                </Grid>
 
                 <!-- ===================== DASHBOARD ===================== -->
                 <Grid x:Name="DashboardPanel" Grid.Row="1">
