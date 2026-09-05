@@ -13,7 +13,7 @@
     <ApplicationHighDpiMode>PerMonitorV2</ApplicationHighDpiMode>
     <AssemblyName>TopBar</AssemblyName>
     <RootNamespace>TopBar</RootNamespace>
-    <InvariantGlobalization>true</InvariantGlobalization>
+    <ApplicationIcon>Assets\icon.ico</ApplicationIcon>
 
     <!-- Ship as a single self-contained exe: no .NET runtime install required on
          the machine that runs it, and no separate DLLs scattered around it -->

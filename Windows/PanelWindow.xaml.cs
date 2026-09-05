@@ -156,16 +156,18 @@ public partial class PanelWindow : Window
     private void StartClock()
     {
         var timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(1) };
-        timer.Tick += (_, _) =>
-        {
-            ClockText.Text = DateTime.Now.ToString("h:mm");
-            AmPmText.Text = DateTime.Now.ToString("tt");
-            DateText.Text = DateTime.Now.ToString("dddd, MMM d");
-        };
+        timer.Tick += (_, _) => RenderClock();
         timer.Start();
-        ClockText.Text = DateTime.Now.ToString("h:mm");
-        AmPmText.Text = DateTime.Now.ToString("tt");
-        DateText.Text = DateTime.Now.ToString("dddd, MMM d");
+        RenderClock();
+    }
+
+    private void RenderClock()
+    {
+        var now = DateTime.Now;
+        WeekdayText.Text = now.ToString("ddd").ToUpperInvariant();
+        ClockText.Text = now.ToString("h:mm");
+        AmPmText.Text = now.ToString("tt");
+        DateText.Text = now.ToString("MMM d").ToUpperInvariant();
     }
 
     // ---------- Dashboard: uptime / profile ----------
@@ -216,13 +218,13 @@ public partial class PanelWindow : Window
         WeatherDescText.Text = reading.Value.Description;
         WeatherIconText.Text = reading.Value.Description switch
         {
-            "Clear" => "☀",
-            "Cloudy" => "☁",
-            "Fog" => "🌫",
-            "Drizzle" or "Rain" or "Showers" => "🌧",
-            "Snow" => "❄",
-            "Storm" => "⛈",
-            _ => "⛅"
+            "Clear" => "\u2600\uFE0E",
+            "Cloudy" => "\u2601\uFE0E",
+            "Fog" => "\u2601\uFE0E",
+            "Drizzle" or "Rain" or "Showers" => "\u2602\uFE0E",
+            "Snow" => "\u2744\uFE0E",
+            "Storm" => "\u26C8\uFE0E",
+            _ => "\u26C5\uFE0E"
         };
     }
 
@@ -302,10 +304,11 @@ public partial class PanelWindow : Window
         LiteTitleText.Text = hasMedia ? _media.Title : "No media";
         LiteArtistText.Text = _media.Artist;
 
-        PlayPauseButton.Content = _media.IsPlaying ? "⏸" : "▶";
-        LitePlayButton.Content = _media.IsPlaying ? "⏸" : "▶";
+        PlayPauseButton.Content = _media.IsPlaying ? "\uE769" : "\uE768";
+        LitePlayButton.Content = _media.IsPlaying ? "\uE769" : "\uE768";
         ShuffleButton.IsChecked = _media.IsShuffleActive;
         RepeatButton.IsChecked = _media.RepeatMode is MediaPlaybackAutoRepeatMode.Track or MediaPlaybackAutoRepeatMode.List;
+        RepeatButton.Content = _media.RepeatMode == MediaPlaybackAutoRepeatMode.Track ? "\uE8ED" : "\uE8EE";
 
         if (_media.AlbumArt is { Length: > 0 })
         {
@@ -318,15 +321,15 @@ public partial class PanelWindow : Window
                 bmp.StreamSource = ms;
                 bmp.EndInit();
                 bmp.Freeze();
-                AlbumImage.Source = bmp;
-                LiteAlbumImage.Source = bmp;
+                AlbumBrush.ImageSource = bmp;
+                LiteAlbumBrush.ImageSource = bmp;
             }
-            catch { AlbumImage.Source = null; LiteAlbumImage.Source = null; }
+            catch { AlbumBrush.ImageSource = null; LiteAlbumBrush.ImageSource = null; }
         }
         else
         {
-            AlbumImage.Source = null;
-            LiteAlbumImage.Source = null;
+            AlbumBrush.ImageSource = null;
+            LiteAlbumBrush.ImageSource = null;
         }
 
         SpotifyBadge.Visibility = _media.IsSpotify ? Visibility.Visible : Visibility.Collapsed;

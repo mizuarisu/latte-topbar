@@ -44,19 +44,20 @@ public partial class App : System.Windows.Application
     {
         _trayIcon = new Forms.NotifyIcon
         {
-            Icon = System.Drawing.SystemIcons.Application,
+            Icon = System.Drawing.Icon.ExtractAssociatedIcon(Environment.ProcessPath ?? "")
+                   ?? System.Drawing.SystemIcons.Application,
             Visible = true,
             Text = "TopBar"
         };
 
         var menu = new Forms.ContextMenuStrip();
-        menu.Items.Add("Toggle panel", null, (_, _) => _panel?.Toggle());
-        menu.Items.Add("Settings…", null, (_, _) => OpenSettings());
+        menu.Items.Add("Toggle panel", null, (_, _) => Dispatcher.BeginInvoke(new Action(() => _panel?.Toggle())));
+        menu.Items.Add("Settings…", null, (_, _) => Dispatcher.BeginInvoke(new Action(OpenSettings)));
         menu.Items.Add(new Forms.ToolStripSeparator());
-        menu.Items.Add("Exit", null, (_, _) => Shutdown());
+        menu.Items.Add("Exit", null, (_, _) => Dispatcher.BeginInvoke(new Action(Shutdown)));
         _trayIcon.ContextMenuStrip = menu;
 
-        _trayIcon.DoubleClick += (_, _) => _panel?.Toggle();
+        _trayIcon.DoubleClick += (_, _) => Dispatcher.BeginInvoke(new Action(() => _panel?.Toggle()));
     }
 
     private void OpenSettings()

@@ -1,7 +1,6 @@
 <Window x:Class="TopBar.Windows.PanelWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:conv="clr-namespace:TopBar.Converters"
         Title="TopBar"
         WindowStyle="None"
         AllowsTransparency="True"
@@ -13,128 +12,6 @@
         Visibility="Hidden"
         FontFamily="Inter, Segoe UI Variable Display, Segoe UI"
         Deactivated="OnDeactivated">
-
-    <Window.Resources>
-        <conv:PercentToWidthMultiConverter x:Key="PercentToWidthConverter" />
-
-        <Style x:Key="TabButtonStyle" TargetType="ToggleButton">
-            <Setter Property="Padding" Value="18,8" />
-            <Setter Property="Margin" Value="0,0,8,0" />
-            <Setter Property="Background" Value="Transparent" />
-            <Setter Property="Foreground" Value="#A6ADC8" />
-            <Setter Property="BorderThickness" Value="0" />
-            <Setter Property="FontSize" Value="12.5" />
-            <Setter Property="FontWeight" Value="Medium" />
-            <Setter Property="Cursor" Value="Hand" />
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="ToggleButton">
-                        <Border x:Name="Bg" CornerRadius="20" Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}">
-                            <ContentPresenter HorizontalAlignment="Center" />
-                        </Border>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsChecked" Value="True">
-                                <Setter TargetName="Bg" Property="Background" Value="#45475A" />
-                                <Setter Property="Foreground" Value="#CDD6F4" />
-                            </Trigger>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="Bg" Property="Background" Value="#2A2B3D" />
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
-        <!-- Round icon buttons: prev/next/shuffle/repeat/play -->
-        <Style x:Key="RoundIconButton" TargetType="Button">
-            <Setter Property="Width" Value="38" />
-            <Setter Property="Height" Value="38" />
-            <Setter Property="Background" Value="#2A2B3D" />
-            <Setter Property="Foreground" Value="#CDD6F4" />
-            <Setter Property="BorderThickness" Value="0" />
-            <Setter Property="FontSize" Value="14" />
-            <Setter Property="Cursor" Value="Hand" />
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Border x:Name="Bg" CornerRadius="19" Background="{TemplateBinding Background}">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
-                        </Border>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="Bg" Property="Background" Value="#363752" />
-                            </Trigger>
-                            <Trigger Property="IsPressed" Value="True">
-                                <Setter TargetName="Bg" Property="Background" Value="#45475A" />
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
-        <Style x:Key="PlayButton" TargetType="Button" BasedOn="{StaticResource RoundIconButton}">
-            <Setter Property="Width" Value="52" />
-            <Setter Property="Height" Value="52" />
-            <Setter Property="Background" Value="#89B4FA" />
-            <Setter Property="Foreground" Value="#1B1B29" />
-            <Setter Property="FontSize" Value="18" />
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Border x:Name="Bg" CornerRadius="26" Background="{TemplateBinding Background}">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
-                        </Border>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="Bg" Property="Background" Value="#A5C6FB" />
-                            </Trigger>
-                            <Trigger Property="IsPressed" Value="True">
-                                <Setter TargetName="Bg" Property="Background" Value="#749EE8" />
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
-        <Style x:Key="ToggleIconButton" TargetType="ToggleButton">
-            <Setter Property="Width" Value="34" />
-            <Setter Property="Height" Value="34" />
-            <Setter Property="Background" Value="Transparent" />
-            <Setter Property="Foreground" Value="#8B90A8" />
-            <Setter Property="BorderThickness" Value="0" />
-            <Setter Property="FontSize" Value="13" />
-            <Setter Property="Cursor" Value="Hand" />
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="ToggleButton">
-                        <Border x:Name="Bg" CornerRadius="17" Background="{TemplateBinding Background}">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
-                        </Border>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsChecked" Value="True">
-                                <Setter TargetName="Bg" Property="Background" Value="#313244" />
-                                <Setter Property="Foreground" Value="#89B4FA" />
-                            </Trigger>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="Bg" Property="Background" Value="#2A2B3D" />
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
-        <Style x:Key="CardStyle" TargetType="Border">
-            <Setter Property="Background" Value="#232435" />
-            <Setter Property="CornerRadius" Value="18" />
-            <Setter Property="Padding" Value="14" />
-            <Setter Property="BorderThickness" Value="1" />
-            <Setter Property="BorderBrush" Value="#2A2B3D" />
-        </Style>
-    </Window.Resources>
 
     <Grid>
         <Border x:Name="RootBorder" CornerRadius="26" Padding="20" Background="#1B1B29" BorderThickness="1" BorderBrush="#2E2F45"
@@ -154,13 +31,14 @@
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
 
-                <Border Grid.Row="0" Background="#232435" CornerRadius="22" Padding="4" Margin="0,0,0,16" HorizontalAlignment="Left">
-                    <StackPanel Orientation="Horizontal">
+                <!-- Tab strip now spans the full width, split evenly between the two tabs -->
+                <Border Grid.Row="0" Background="#232435" CornerRadius="20" Padding="4" Margin="0,0,0,16">
+                    <UniformGrid Columns="2">
                         <ToggleButton x:Name="TabDashboard" Content="Dashboard" IsChecked="True"
                                       Style="{StaticResource TabButtonStyle}" Click="OnTabClick" Tag="Dashboard" />
                         <ToggleButton x:Name="TabMedia" Content="Media"
                                       Style="{StaticResource TabButtonStyle}" Click="OnTabClick" Tag="Media" />
-                    </StackPanel>
+                    </UniformGrid>
                 </Border>
 
                 <!-- ===================== DASHBOARD ===================== -->
@@ -171,17 +49,17 @@
                         <ColumnDefinition Width="190" />
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="120" />
+                        <RowDefinition Height="132" />
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
 
                     <!-- Weather -->
                     <Border Grid.Row="0" Grid.Column="0" Style="{StaticResource CardStyle}" Margin="0,0,12,12">
                         <StackPanel VerticalAlignment="Center">
-                            <TextBlock x:Name="WeatherIconText" FontSize="26" Text="⛅" />
-                            <TextBlock x:Name="WeatherTempText" FontSize="26" FontWeight="SemiBold"
-                                       Foreground="#CDD6F4" Margin="0,4,0,0" Text="--°" />
-                            <TextBlock x:Name="WeatherDescText" FontSize="12" Foreground="#8B90A8" Text="--" />
+                            <TextBlock x:Name="WeatherIconText" FontSize="22" Foreground="#CDD6F4" Text="⛅︎" />
+                            <TextBlock x:Name="WeatherTempText" FontSize="24" FontWeight="SemiBold"
+                                       Foreground="#CDD6F4" Margin="0,6,0,0" Text="--°" />
+                            <TextBlock x:Name="WeatherDescText" FontSize="11.5" Foreground="#8B90A8" Margin="0,2,0,0" Text="--" />
                         </StackPanel>
                     </Border>
 
@@ -199,31 +77,36 @@
                     </Border>
 
                     <!-- Media (lite) -->
-                    <Border Grid.Row="0" Grid.RowSpan="2" Grid.Column="2" Style="{StaticResource CardStyle}" Margin="0,0,0,0">
+                    <Border Grid.Row="0" Grid.RowSpan="2" Grid.Column="2" Style="{StaticResource CardStyle}">
                         <StackPanel>
-                            <Border Width="90" Height="90" CornerRadius="14" Background="#2A2B3D" HorizontalAlignment="Center">
-                                <Image x:Name="LiteAlbumImage" Stretch="UniformToFill" />
-                            </Border>
+                            <Grid Width="92" Height="92" HorizontalAlignment="Center">
+                                <Polygon Points="18,0 74,0 92,18 92,74 74,92 18,92 0,74 0,18" Fill="#2A2B3D" />
+                                <Polygon Points="18,0 74,0 92,18 92,74 74,92 18,92 0,74 0,18">
+                                    <Polygon.Fill>
+                                        <ImageBrush x:Name="LiteAlbumBrush" Stretch="UniformToFill" />
+                                    </Polygon.Fill>
+                                </Polygon>
+                            </Grid>
                             <TextBlock x:Name="LiteTitleText" FontSize="13" FontWeight="SemiBold" Foreground="#CDD6F4"
                                        HorizontalAlignment="Center" Margin="0,10,0,0" TextTrimming="CharacterEllipsis" Text="No media" />
                             <TextBlock x:Name="LiteArtistText" FontSize="11" Foreground="#8B90A8"
                                        HorizontalAlignment="Center" Margin="0,2,0,12" TextTrimming="CharacterEllipsis" Text="" />
                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                <Button Content="⏮" Style="{StaticResource RoundIconButton}" Width="30" Height="30" Margin="0,0,6,0" Click="OnPrevClick" />
-                                <Button x:Name="LitePlayButton" Content="▶" Style="{StaticResource RoundIconButton}" Width="30" Height="30" Margin="0,0,6,0" Click="OnPlayPauseClick" />
-                                <Button Content="⏭" Style="{StaticResource RoundIconButton}" Width="30" Height="30" Click="OnNextClick" />
+                                <Button Content="&#xE892;" Style="{StaticResource RoundIconButton}" Width="30" Height="30" FontSize="10" Margin="0,0,6,0" Click="OnPrevClick" />
+                                <Button x:Name="LitePlayButton" Content="&#xE768;" Style="{StaticResource RoundIconButton}" Width="30" Height="30" FontSize="10" Margin="0,0,6,0" Click="OnPlayPauseClick" />
+                                <Button Content="&#xE893;" Style="{StaticResource RoundIconButton}" Width="30" Height="30" FontSize="10" Click="OnNextClick" />
                             </StackPanel>
                         </StackPanel>
                     </Border>
 
-                    <!-- Clock / date -->
+                    <!-- Clock / date — compact stacked format: WED / 10:13 / PM / SEP 2 -->
                     <Border Grid.Row="1" Grid.Column="0" Style="{StaticResource CardStyle}" Margin="0,0,12,0">
                         <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-                            <TextBlock x:Name="ClockText" FontSize="36" FontWeight="SemiBold"
-                                       Foreground="#CDD6F4" HorizontalAlignment="Center" Text="--:--" />
-                            <TextBlock x:Name="AmPmText" FontSize="13" Foreground="#8B90A8" HorizontalAlignment="Center" Text="--" />
-                            <TextBlock x:Name="DateText" FontSize="12" Foreground="#8B90A8"
-                                       HorizontalAlignment="Center" Margin="0,10,0,0" Text="--" />
+                            <TextBlock x:Name="WeekdayText" Style="{StaticResource CaptionLabel}" Text="---" />
+                            <TextBlock x:Name="ClockText" FontSize="32" FontWeight="SemiBold"
+                                       Foreground="#CDD6F4" HorizontalAlignment="Center" Margin="0,4,0,0" Text="--:--" />
+                            <TextBlock x:Name="AmPmText" FontSize="12" Foreground="#8B90A8" HorizontalAlignment="Center" Margin="0,2,0,8" Text="--" />
+                            <TextBlock x:Name="DateText" Style="{StaticResource CaptionLabel}" Text="---" />
                         </StackPanel>
                     </Border>
 
@@ -242,12 +125,12 @@
                                     <ColumnDefinition Width="*" />
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
-                                <Button Grid.Column="0" Content="‹" Click="OnCalendarPrev"
-                                        Style="{StaticResource RoundIconButton}" Width="26" Height="26" FontSize="13" />
+                                <Button Grid.Column="0" Content="&#xE76B;" Click="OnCalendarPrev"
+                                        Style="{StaticResource RoundIconButton}" Width="26" Height="26" FontSize="10" />
                                 <TextBlock x:Name="CalendarMonthText" Grid.Column="1" HorizontalAlignment="Center"
                                            VerticalAlignment="Center" FontWeight="SemiBold" Foreground="#CDD6F4" Text="--" />
-                                <Button Grid.Column="2" Content="›" Click="OnCalendarNext"
-                                        Style="{StaticResource RoundIconButton}" Width="26" Height="26" FontSize="13" />
+                                <Button Grid.Column="2" Content="&#xE76C;" Click="OnCalendarNext"
+                                        Style="{StaticResource RoundIconButton}" Width="26" Height="26" FontSize="10" />
                             </Grid>
 
                             <UniformGrid x:Name="CalendarWeekdayHeader" Grid.Row="1" Columns="7" Margin="0,0,0,4" />
@@ -263,14 +146,18 @@
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
-                    <!-- Album art + visualizer ring + controls -->
+                    <!-- Album art (octagon) + visualizer ring + controls -->
                     <StackPanel Grid.Column="0" Margin="0,0,16,0">
                         <Grid x:Name="VisualizerHost" Width="220" Height="220" HorizontalAlignment="Center">
                             <Canvas x:Name="VisualizerCanvas" Width="220" Height="220" />
-                            <Border Width="150" Height="150" CornerRadius="24" Background="#2A2B3D"
-                                    HorizontalAlignment="Center" VerticalAlignment="Center" ClipToBounds="True">
-                                <Image x:Name="AlbumImage" Stretch="UniformToFill" />
-                            </Border>
+                            <Grid Width="150" Height="150" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <Polygon Points="30,0 120,0 150,30 150,120 120,150 30,150 0,120 0,30" Fill="#2A2B3D" />
+                                <Polygon Points="30,0 120,0 150,30 150,120 120,150 30,150 0,120 0,30">
+                                    <Polygon.Fill>
+                                        <ImageBrush x:Name="AlbumBrush" Stretch="UniformToFill" />
+                                    </Polygon.Fill>
+                                </Polygon>
+                            </Grid>
                         </Grid>
 
                         <TextBlock x:Name="MediaTitleText" FontSize="17" FontWeight="SemiBold" Foreground="#CDD6F4"
@@ -296,11 +183,11 @@
                         </Grid>
 
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                            <ToggleButton x:Name="ShuffleButton" Content="🔀" Style="{StaticResource ToggleIconButton}" Margin="0,0,8,0" Click="OnShuffleClick" />
-                            <Button Content="⏮" Style="{StaticResource RoundIconButton}" Margin="0,0,8,0" Click="OnPrevClick" />
-                            <Button x:Name="PlayPauseButton" Content="▶" Style="{StaticResource PlayButton}" Margin="0,0,8,0" Click="OnPlayPauseClick" />
-                            <Button Content="⏭" Style="{StaticResource RoundIconButton}" Margin="0,0,8,0" Click="OnNextClick" />
-                            <ToggleButton x:Name="RepeatButton" Content="🔁" Style="{StaticResource ToggleIconButton}" Click="OnRepeatClick" />
+                            <ToggleButton x:Name="ShuffleButton" Content="&#xE8B1;" Style="{StaticResource ToggleIconButton}" Margin="0,0,8,0" Click="OnShuffleClick" />
+                            <Button Content="&#xE892;" Style="{StaticResource RoundIconButton}" Margin="0,0,8,0" Click="OnPrevClick" />
+                            <Button x:Name="PlayPauseButton" Content="&#xE768;" Style="{StaticResource PlayButton}" Margin="0,0,8,0" Click="OnPlayPauseClick" />
+                            <Button Content="&#xE893;" Style="{StaticResource RoundIconButton}" Margin="0,0,8,0" Click="OnNextClick" />
+                            <ToggleButton x:Name="RepeatButton" Content="&#xE8EE;" Style="{StaticResource ToggleIconButton}" Click="OnRepeatClick" />
                         </StackPanel>
                     </StackPanel>
 

@@ -69,6 +69,24 @@ Publish the same standalone single-file exe locally:
 dotnet publish -c Release -r win-x64 --self-contained true
 ```
 
+## Changing the icon
+
+`Assets/icon.ico` is a placeholder (a rounded square with a "T"). It's wired
+up in two places:
+
+- `TopBar.csproj` → `<ApplicationIcon>` sets the icon on `TopBar.exe` itself
+  (what you see in Explorer, the taskbar, Alt-Tab).
+- `App.xaml.cs` → the tray icon reads that same icon back off the running
+  exe at startup, so you only ever need to replace one file.
+
+To use your own: make (or export) a multi-resolution `.ico` — ideally
+containing 16, 32, 48, and 256px sizes — and overwrite `Assets/icon.ico`
+with it, keeping the same filename and path. Any online "PNG to ICO"
+converter works, or an image editor that supports multi-size ICO export
+(GIMP does, via File → Export As → .ico). Commit the replacement the
+same way as any other file change, and the next Actions build picks it
+up automatically.
+
 ## Architecture notes
 
 - **Hotkey, not hover.** Global hotkey via `RegisterHotKey`/`WM_HOTKEY`

@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Windows;
 using System.Windows.Input;
 using Microsoft.Win32;
@@ -26,10 +27,19 @@ public partial class SettingsWindow : Window
         TertiaryColorBox.Text = s.TertiaryColor;
         PfpPathBox.Text = s.ProfilePicturePath ?? "";
         WeatherLabelBox.Text = s.WeatherLabel;
-        LatBox.Text = s.WeatherLat.ToString("0.####");
-        LonBox.Text = s.WeatherLon.ToString("0.####");
+        // Invariant culture explicitly — otherwise this renders with a comma decimal
+        // separator on locales like id-ID, which then fails to round-trip on Save.
+        LatBox.Text = s.WeatherLat.ToString("0.####", CultureInfo.InvariantCulture);
+        LonBox.Text = s.WeatherLon.ToString("0.####", CultureInfo.InvariantCulture);
         FahrenheitCheck.IsChecked = s.WeatherFahrenheit;
     }
+
+    private void OnHeaderDrag(object sender, MouseButtonEventArgs e)
+    {
+        if (e.LeftButton == MouseButtonState.Pressed) DragMove();
+    }
+
+    private void OnCancel(object sender, RoutedEventArgs e) => Close();
 
     private void OnHotkeyPreviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
     {
@@ -66,8 +76,8 @@ public partial class SettingsWindow : Window
         s.ProfilePicturePath = string.IsNullOrWhiteSpace(PfpPathBox.Text) ? null : PfpPathBox.Text.Trim();
         s.WeatherLabel = WeatherLabelBox.Text.Trim();
 
-        if (double.TryParse(LatBox.Text, out var lat)) s.WeatherLat = lat;
-        if (double.TryParse(LonBox.Text, out var lon)) s.WeatherLon = lon;
+        if (double.TryParse(LatBox.Text, NumberStyles.Float, CultureInfo.InvariantCulture, out var lat)) s.WeatherLat = lat;
+        if (double.TryParse(LonBox.Text, NumberStyles.Float, CultureInfo.InvariantCulture, out var lon)) s.WeatherLon = lon;
         s.WeatherFahrenheit = FahrenheitCheck.IsChecked == true;
 
         _settings.Save(); // raises SettingsChanged, which the panel listens to for live theme refresh
