@@ -2,6 +2,7 @@ using System.Globalization;
 using System.Windows;
 using System.Windows.Input;
 using Microsoft.Win32;
+using TopBar.Helpers;
 using TopBar.Services;
 
 namespace TopBar.Windows;
@@ -20,6 +21,7 @@ public partial class SettingsWindow : Window
         _capturedKey = _settings.Current.HotkeyKey;
 
         var s = _settings.Current;
+        RootBorder.Background = ColorUtils.VerticalDepthGradient(ColorUtils.Parse(s.MainColor));
         HotkeyBox.Text = $"Alt + {_capturedKey}";
         AutoStartCheck.IsChecked = s.AutoStart;
         MainColorBox.Text = s.MainColor;

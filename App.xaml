@@ -18,6 +18,26 @@
         <SolidColorBrush x:Key="TextMutedBrush" Color="#8B90A8" />
         <SolidColorBrush x:Key="TextFaintBrush" Color="#5C6079" />
 
+        <!-- Subtle top-to-bottom gradient so card surfaces read as raised glass, not flat fill -->
+        <LinearGradientBrush x:Key="CardGradientBrush" StartPoint="0,0" EndPoint="0,1">
+            <GradientStop Color="#282A40" Offset="0" />
+            <GradientStop Color="#1F2032" Offset="1" />
+        </LinearGradientBrush>
+
+        <!-- Faint light-catching edge on the top-left of a card, like a glass bevel -->
+        <LinearGradientBrush x:Key="GlassEdgeBrush" StartPoint="0,0" EndPoint="1,1">
+            <GradientStop Color="#30FFFFFF" Offset="0" />
+            <GradientStop Color="#00FFFFFF" Offset="0.5" />
+        </LinearGradientBrush>
+
+        <!-- Standard soft elevation shadow shared by every card -->
+        <DropShadowEffect x:Key="CardShadow" Color="Black" Opacity="0.28" BlurRadius="18" ShadowDepth="4" Direction="270" />
+
+        <!-- Glow used behind the accent play button -->
+        <DropShadowEffect x:Key="AccentGlow" Color="#89B4FA" Opacity="0.55" BlurRadius="24" ShadowDepth="0" />
+
+        <SolidColorBrush x:Key="TabSelectedBrush" Color="#3A3C57" />
+
         <Style x:Key="TabButtonStyle" TargetType="ToggleButton">
             <Setter Property="Padding" Value="18,9" />
             <Setter Property="Background" Value="Transparent" />
@@ -35,7 +55,7 @@
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsChecked" Value="True">
-                                <Setter TargetName="Bg" Property="Background" Value="#3A3C57" />
+                                <Setter TargetName="Bg" Property="Background" Value="{StaticResource TabSelectedBrush}" />
                                 <Setter Property="Foreground" Value="#EDEFFC" />
                             </Trigger>
                             <Trigger Property="IsMouseOver" Value="True">
@@ -75,12 +95,18 @@
             </Setter>
         </Style>
 
+        <LinearGradientBrush x:Key="AccentGradientBrush" StartPoint="0,0" EndPoint="0,1">
+            <GradientStop Color="#A5C6FB" Offset="0" />
+            <GradientStop Color="#89B4FA" Offset="1" />
+        </LinearGradientBrush>
+
         <Style x:Key="PlayButton" TargetType="Button" BasedOn="{StaticResource RoundIconButton}">
             <Setter Property="Width" Value="54" />
             <Setter Property="Height" Value="54" />
-            <Setter Property="Background" Value="{StaticResource AccentBrush}" />
+            <Setter Property="Background" Value="{StaticResource AccentGradientBrush}" />
             <Setter Property="Foreground" Value="{StaticResource SurfaceBrush}" />
             <Setter Property="FontSize" Value="16" />
+            <Setter Property="Effect" Value="{StaticResource AccentGlow}" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
@@ -139,11 +165,12 @@
         </Style>
 
         <Style x:Key="CardStyle" TargetType="Border">
-            <Setter Property="Background" Value="{StaticResource CardBrush}" />
-            <Setter Property="CornerRadius" Value="18" />
-            <Setter Property="Padding" Value="14" />
+            <Setter Property="Background" Value="{StaticResource CardGradientBrush}" />
+            <Setter Property="CornerRadius" Value="20" />
+            <Setter Property="Padding" Value="16" />
             <Setter Property="BorderThickness" Value="1" />
-            <Setter Property="BorderBrush" Value="{StaticResource CardBorderBrush}" />
+            <Setter Property="BorderBrush" Value="{StaticResource GlassEdgeBrush}" />
+            <Setter Property="Effect" Value="{StaticResource CardShadow}" />
         </Style>
 
         <Style x:Key="CaptionLabel" TargetType="TextBlock">

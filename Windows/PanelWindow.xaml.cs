@@ -7,6 +7,7 @@ using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Windows.Threading;
+using TopBar.Helpers;
 using TopBar.Services;
 using Windows.Media;
 
@@ -120,7 +121,7 @@ public partial class PanelWindow : Window
     private void ApplyTheme()
     {
         var s = _settings.Current;
-        RootBorder.Background = Brush(s.MainColor);
+        RootBorder.Background = ColorUtils.VerticalDepthGradient(ColorUtils.Parse(s.MainColor));
 
         if (!string.IsNullOrEmpty(s.ProfilePicturePath) && System.IO.File.Exists(s.ProfilePicturePath))
         {

@@ -87,6 +87,7 @@
                     <!-- Media (lite) -->
                     <Border Grid.Row="0" Grid.RowSpan="2" Grid.Column="2" Style="{StaticResource CardStyle}">
                         <StackPanel>
+                            <TextBlock Text="MEDIA" FontSize="10.5" FontWeight="SemiBold" Foreground="{StaticResource TextFaintBrush}" Margin="0,0,0,12" />
                             <Grid Width="92" Height="92" HorizontalAlignment="Center">
                                 <Polygon Points="18,0 74,0 92,18 92,74 74,92 18,92 0,74 0,18" Fill="#2A2B3D" />
                                 <Polygon Points="18,0 74,0 92,18 92,74 74,92 18,92 0,74 0,18">

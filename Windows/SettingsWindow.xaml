@@ -11,7 +11,7 @@
         FontFamily="Inter, Segoe UI Variable Display, Segoe UI"
         Foreground="{StaticResource TextPrimaryBrush}">
 
-    <Border CornerRadius="24" Background="{StaticResource SurfaceBrush}" BorderThickness="1" BorderBrush="#2E2F45" Padding="22">
+    <Border x:Name="RootBorder" CornerRadius="24" Background="{StaticResource SurfaceBrush}" BorderThickness="1" BorderBrush="#2E2F45" Padding="22">
         <Border.Effect>
             <DropShadowEffect Color="Black" Opacity="0.45" BlurRadius="36" ShadowDepth="10" Direction="270" />
         </Border.Effect>
