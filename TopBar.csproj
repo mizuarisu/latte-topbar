@@ -24,4 +24,16 @@
     <PublishReadyToRun>true</PublishReadyToRun>
   </PropertyGroup>
 
+  <!-- .NET SDK bug (dotnet/sdk#37608): when both UseWPF and UseWindowsForms are true,
+       ImplicitUsings silently injects both frameworks' namespaces as GLOBAL usings,
+       so any type name both frameworks define (Application, Color, Rectangle,
+       KeyEventArgs, MessageBox, OpenFileDialog, ...) becomes ambiguous everywhere in
+       the project. We only use WinForms for the tray icon, and that code already
+       fully-qualifies or aliases every WinForms type, so removing these two implicit
+       usings has no downside and eliminates this whole class of error at the source. -->
+  <ItemGroup>
+    <Using Remove="System.Drawing" />
+    <Using Remove="System.Windows.Forms" />
+  </ItemGroup>
+
 </Project>
