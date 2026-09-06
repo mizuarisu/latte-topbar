@@ -17,13 +17,21 @@
             <DropShadowEffect Color="Black" Opacity="0.45" BlurRadius="36" ShadowDepth="10" Direction="270" />
         </Border.Effect>
 
-        <StackPanel>
-            <!-- Custom draggable header, since the window has no native chrome -->
-            <Grid MouseLeftButtonDown="OnHeaderDrag" Margin="0,0,0,18">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <!-- Custom draggable header, since the window has no native chrome — stays fixed while the rest scrolls -->
+            <Grid Grid.Row="0" MouseLeftButtonDown="OnHeaderDrag" Margin="0,0,0,18">
                 <TextBlock Text="Settings" FontSize="17" FontWeight="SemiBold" Foreground="{DynamicResource ThemeTextBrush}" />
                 <Button Content="✕" Style="{StaticResource FlatIconButton}" FontSize="13"
                         HorizontalAlignment="Right" Click="OnCancel" />
             </Grid>
+
+            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Margin="0,0,-10,0" Padding="0,0,10,0">
+            <StackPanel>
 
             <!-- Hotkey -->
             <TextBlock Text="HOTKEY" Style="{StaticResource SectionLabel}" />
@@ -82,7 +90,7 @@
                         <TextBlock Grid.Column="0" Text="Corner roundness" FontSize="12" Foreground="{DynamicResource ThemeTextBrush}" VerticalAlignment="Center" />
                         <TextBlock x:Name="CornerRadiusLabel" Grid.Column="1" FontSize="12" Foreground="{DynamicResource ThemeMutedTextBrush}" Text="20px" />
                     </Grid>
-                    <Slider x:Name="CornerRadiusSlider" Minimum="4" Maximum="32" Value="20" Margin="0,4,0,14"
+                    <Slider x:Name="CornerRadiusSlider" Minimum="4" Maximum="32" Value="20" Margin="0,4,0,14" FocusVisualStyle="{x:Null}"
                             ValueChanged="OnCornerRadiusChanged" />
 
                     <CheckBox x:Name="ShadowCheck" Content="Card shadows" Style="{StaticResource FieldCheckBox}"
@@ -119,6 +127,23 @@
                 </Grid>
             </Border>
 
+            <!-- Media card image — shown on the Dashboard's Media widget when nothing is playing -->
+            <TextBlock Text="MEDIA CARD IMAGE" Style="{StaticResource SectionLabel}" />
+            <Border Style="{StaticResource CardStyle}" Margin="0,0,0,18">
+                <StackPanel>
+                    <TextBlock Text="Shown in the Dashboard's Media widget when nothing is playing."
+                               FontSize="11.5" Foreground="{DynamicResource ThemeMutedTextBrush}" Margin="0,0,0,8" TextWrapping="Wrap" />
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <TextBox x:Name="MediaImagePathBox" Grid.Column="0" IsReadOnly="True" Style="{StaticResource FieldTextBox}" Margin="0,0,10,0" />
+                        <Button Grid.Column="1" Content="Browse…" Style="{StaticResource SecondaryButton}" Click="OnBrowseMediaImage" />
+                    </Grid>
+                </StackPanel>
+            </Border>
+
             <!-- Weather -->
             <TextBlock Text="WEATHER LOCATION" Style="{StaticResource SectionLabel}" />
             <Border Style="{StaticResource CardStyle}" Margin="0,0,0,20">
@@ -143,6 +168,8 @@
             </Border>
 
             <Button Content="Save" Style="{StaticResource PrimaryButton}" Click="OnSave" />
-        </StackPanel>
+            </StackPanel>
+            </ScrollViewer>
+        </Grid>
     </Border>
 </Window>

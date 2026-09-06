@@ -75,12 +75,12 @@
                     <!-- Profile / uptime -->
                     <Border Grid.Row="0" Grid.Column="1" Style="{StaticResource CardStyle}" Margin="0,0,12,12">
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                            <Border Width="52" Height="52" CornerRadius="26" Background="#2A2B3D">
+                            <Border Width="64" Height="64" CornerRadius="32" Background="{DynamicResource ThemeElevatedBrush}">
                                 <Image x:Name="PfpImage" Stretch="UniformToFill" />
                             </Border>
                             <StackPanel Margin="14,0,0,0" VerticalAlignment="Center">
-                                <TextBlock x:Name="ProfileNameText" FontSize="15" FontWeight="SemiBold" Foreground="#CDD6F4" Text="--" />
-                                <TextBlock x:Name="UptimeText" FontSize="12" Foreground="#8B90A8" Margin="0,3,0,0" Text="up --" />
+                                <TextBlock x:Name="ProfileNameText" FontSize="17" FontWeight="SemiBold" Foreground="{DynamicResource ThemeTextBrush}" Text="--" />
+                                <TextBlock x:Name="UptimeText" FontSize="12.5" Foreground="{DynamicResource ThemeMutedTextBrush}" Margin="0,4,0,0" Text="up --" />
                             </StackPanel>
                         </StackPanel>
                     </Border>
@@ -89,17 +89,17 @@
                     <Border Grid.Row="0" Grid.RowSpan="2" Grid.Column="2" Style="{StaticResource CardStyle}">
                         <StackPanel>
                             <TextBlock Text="MEDIA" FontSize="10.5" FontWeight="SemiBold" Foreground="{DynamicResource ThemeFaintTextBrush}" Margin="0,0,0,12" />
-                            <Grid Width="92" Height="92" HorizontalAlignment="Center">
-                                <Polygon Points="18,0 74,0 92,18 92,74 74,92 18,92 0,74 0,18" Fill="#2A2B3D" />
-                                <Polygon Points="18,0 74,0 92,18 92,74 74,92 18,92 0,74 0,18">
+                            <Grid Width="112" Height="112" HorizontalAlignment="Center">
+                                <Polygon Points="22,0 90,0 112,22 112,90 90,112 22,112 0,90 0,22" Fill="{DynamicResource ThemeElevatedBrush}" />
+                                <Polygon Points="22,0 90,0 112,22 112,90 90,112 22,112 0,90 0,22">
                                     <Polygon.Fill>
                                         <ImageBrush x:Name="LiteAlbumBrush" Stretch="UniformToFill" />
                                     </Polygon.Fill>
                                 </Polygon>
                             </Grid>
-                            <TextBlock x:Name="LiteTitleText" FontSize="13" FontWeight="SemiBold" Foreground="#CDD6F4"
+                            <TextBlock x:Name="LiteTitleText" FontSize="13" FontWeight="SemiBold" Foreground="{DynamicResource ThemeTextBrush}"
                                        HorizontalAlignment="Center" Margin="0,10,0,0" TextTrimming="CharacterEllipsis" Text="No media" />
-                            <TextBlock x:Name="LiteArtistText" FontSize="11" Foreground="#8B90A8"
+                            <TextBlock x:Name="LiteArtistText" FontSize="11" Foreground="{DynamicResource ThemeMutedTextBrush}"
                                        HorizontalAlignment="Center" Margin="0,2,0,12" TextTrimming="CharacterEllipsis" Text="" />
                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                                 <Button Content="&#xE892;" Style="{StaticResource RoundIconButton}" Width="30" Height="30" FontSize="10" Margin="0,0,6,0" Click="OnPrevClick" />

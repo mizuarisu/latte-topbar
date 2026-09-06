@@ -18,6 +18,8 @@ public partial class SettingsWindow : Window
     public SettingsWindow(SettingsService settings, HotkeyService hotkey)
     {
         InitializeComponent();
+        MaxHeight = SystemParameters.WorkArea.Height * 0.88; // leaves room so it never exceeds the screen
+
         _settings = settings;
         _hotkey = hotkey;
         _capturedKey = _settings.Current.HotkeyKey;
@@ -33,6 +35,7 @@ public partial class SettingsWindow : Window
         CornerRadiusLabel.Text = $"{s.CornerRadius:0}px";
         ShadowCheck.IsChecked = s.ShadowEnabled;
         PfpPathBox.Text = s.ProfilePicturePath ?? "";
+        MediaImagePathBox.Text = s.MediaImagePath ?? "";
         WeatherLabelBox.Text = s.WeatherLabel;
         // Invariant culture explicitly — otherwise this renders with a comma decimal
         // separator on locales like id-ID, which then fails to round-trip on Save.
@@ -97,6 +100,13 @@ public partial class SettingsWindow : Window
             PfpPathBox.Text = dialog.FileName;
     }
 
+    private void OnBrowseMediaImage(object sender, RoutedEventArgs e)
+    {
+        var dialog = new Microsoft.Win32.OpenFileDialog { Filter = "Image files|*.png;*.jpg;*.jpeg;*.bmp;*.gif" };
+        if (dialog.ShowDialog() == true)
+            MediaImagePathBox.Text = dialog.FileName;
+    }
+
     private void OnSave(object sender, RoutedEventArgs e)
     {
         var s = _settings.Current;
@@ -110,6 +120,7 @@ public partial class SettingsWindow : Window
         s.CornerRadius = CornerRadiusSlider.Value;
         s.ShadowEnabled = ShadowCheck.IsChecked == true;
         s.ProfilePicturePath = string.IsNullOrWhiteSpace(PfpPathBox.Text) ? null : PfpPathBox.Text.Trim();
+        s.MediaImagePath = string.IsNullOrWhiteSpace(MediaImagePathBox.Text) ? null : MediaImagePathBox.Text.Trim();
         s.WeatherLabel = WeatherLabelBox.Text.Trim();
 
         if (double.TryParse(LatBox.Text, NumberStyles.Float, CultureInfo.InvariantCulture, out var lat)) s.WeatherLat = lat;

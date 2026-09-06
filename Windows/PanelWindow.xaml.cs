@@ -128,6 +128,9 @@ public partial class PanelWindow : Window
             try { PfpImage.Source = new BitmapImage(new Uri(s.ProfilePicturePath)); }
             catch { /* bad file — leave placeholder */ }
         }
+
+        if (string.IsNullOrEmpty(_media.Title))
+            LiteAlbumBrush.ImageSource = LoadMediaPlaceholder();
     }
 
     private static SolidColorBrush Brush(string hex)
@@ -299,6 +302,23 @@ public partial class PanelWindow : Window
 
     // ---------- Media ----------
 
+    private BitmapImage? LoadMediaPlaceholder()
+    {
+        var path = _settings.Current.MediaImagePath;
+        if (string.IsNullOrEmpty(path) || !File.Exists(path)) return null;
+        try
+        {
+            var bmp = new BitmapImage();
+            bmp.BeginInit();
+            bmp.CacheOption = BitmapCacheOption.OnLoad;
+            bmp.UriSource = new Uri(path);
+            bmp.EndInit();
+            bmp.Freeze();
+            return bmp;
+        }
+        catch { return null; }
+    }
+
     private async void RefreshMedia()
     {
         bool hasMedia = !string.IsNullOrEmpty(_media.Title);
@@ -334,7 +354,7 @@ public partial class PanelWindow : Window
         else
         {
             AlbumBrush.ImageSource = null;
-            LiteAlbumBrush.ImageSource = null;
+            LiteAlbumBrush.ImageSource = LoadMediaPlaceholder();
         }
 
         SpotifyBadge.Visibility = _media.IsSpotify ? Visibility.Visible : Visibility.Collapsed;

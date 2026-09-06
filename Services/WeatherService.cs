@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text.Json.Serialization;
@@ -14,7 +15,12 @@ internal sealed class WeatherService : IDisposable
 
     public async Task<WeatherReading?> GetCurrentAsync(CancellationToken ct = default)
     {
-        var url = $"https://api.open-meteo.com/v1/forecast?latitude={Latitude}&longitude={Longitude}" +
+        // Invariant culture is essential here — on locales like id-ID, plain string
+        // interpolation renders "-6.2088" as "-6,2088" (comma decimal separator),
+        // which silently breaks the query string and made this "just fail" before.
+        var lat = Latitude.ToString(CultureInfo.InvariantCulture);
+        var lon = Longitude.ToString(CultureInfo.InvariantCulture);
+        var url = $"https://api.open-meteo.com/v1/forecast?latitude={lat}&longitude={lon}" +
                   "&current=temperature_2m,weather_code&timezone=auto";
         try
         {

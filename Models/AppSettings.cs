@@ -25,4 +25,5 @@ public sealed class AppSettings
     public bool WeatherFahrenheit { get; set; } = false;
 
     public string? ProfilePicturePath { get; set; } = null;
+    public string? MediaImagePath { get; set; } = null;
 }
