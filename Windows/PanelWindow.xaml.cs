@@ -130,7 +130,7 @@ public partial class PanelWindow : Window
         }
 
         if (string.IsNullOrEmpty(_media.Title))
-            LiteAlbumBrush.ImageSource = LoadMediaPlaceholder();
+            RefreshMediaCustomImage();
     }
 
     private static SolidColorBrush Brush(string hex)
@@ -182,7 +182,7 @@ public partial class PanelWindow : Window
 
     private void StartUptimeLoop()
     {
-        ProfileNameText.Text = Environment.UserName;
+        ProfileNameText.Text = $"Hello, {Environment.UserName}";
         var timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(30) };
         timer.Tick += (_, _) => UptimeText.Text = FormatUptime();
         timer.Start();
@@ -192,9 +192,13 @@ public partial class PanelWindow : Window
     private static string FormatUptime()
     {
         var uptime = TimeSpan.FromMilliseconds(Environment.TickCount64);
-        return uptime.TotalHours >= 1
-            ? $"up {(int)uptime.TotalHours}h {uptime.Minutes}m"
-            : $"up {uptime.Minutes}m";
+        int hours = (int)uptime.TotalHours;
+        int minutes = uptime.Minutes;
+
+        string hoursPart = hours == 1 ? "1 hour" : $"{hours} hours";
+        string minutesPart = minutes == 1 ? "1 minute" : $"{minutes} minutes";
+
+        return hours >= 1 ? $"Uptime: {hoursPart} {minutesPart}" : $"Uptime: {minutesPart}";
     }
 
     // ---------- Dashboard: weather ----------
@@ -319,6 +323,15 @@ public partial class PanelWindow : Window
         catch { return null; }
     }
 
+    private void RefreshMediaCustomImage()
+    {
+        bool hasMedia = !string.IsNullOrEmpty(_media.Title);
+        var placeholder = hasMedia ? null : LoadMediaPlaceholder();
+
+        MediaCustomImage.Source = placeholder;
+        MediaCustomImageHost.Visibility = placeholder is null ? Visibility.Collapsed : Visibility.Visible;
+    }
+
     private async void RefreshMedia()
     {
         bool hasMedia = !string.IsNullOrEmpty(_media.Title);
@@ -354,8 +367,10 @@ public partial class PanelWindow : Window
         else
         {
             AlbumBrush.ImageSource = null;
-            LiteAlbumBrush.ImageSource = LoadMediaPlaceholder();
+            LiteAlbumBrush.ImageSource = null;
         }
+
+        RefreshMediaCustomImage();
 
         SpotifyBadge.Visibility = _media.IsSpotify ? Visibility.Visible : Visibility.Collapsed;
 
