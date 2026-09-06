@@ -15,6 +15,10 @@ public sealed class AppSettings
     public string TertiaryColor { get; set; } = "#89B4FA";  // accent (active tab, highlights)
     public string TextColor { get; set; } = "#CDD6F4";
 
+    // Shape/elevation — the other half of "make it customizable" alongside color
+    public double CornerRadius { get; set; } = 20;
+    public bool ShadowEnabled { get; set; } = true;
+
     public double WeatherLat { get; set; } = -6.2088;
     public double WeatherLon { get; set; } = 106.8456;
     public string WeatherLabel { get; set; } = "Jakarta";

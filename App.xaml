@@ -5,43 +5,39 @@
     <Application.Resources>
         <conv:PercentToWidthMultiConverter x:Key="PercentToWidthConverter" />
 
-        <!-- ============ Shared design system — used by every window ============ -->
+        <!-- ============ Live theme resources ============
+             These are overwritten at runtime by ThemeApplier — every element below
+             uses DynamicResource (not StaticResource) so the whole app updates
+             instantly as the user edits Settings, before they even hit Save.
+             The values here are just startup defaults / design-time fallbacks. -->
 
-        <SolidColorBrush x:Key="SurfaceBrush" Color="#1B1B29" />
-        <SolidColorBrush x:Key="CardBrush" Color="#232435" />
-        <SolidColorBrush x:Key="CardBorderBrush" Color="#2A2B3D" />
-        <SolidColorBrush x:Key="ElevatedBrush" Color="#2A2B3D" />
-        <SolidColorBrush x:Key="AccentBrush" Color="#89B4FA" />
-        <SolidColorBrush x:Key="AccentHoverBrush" Color="#A5C6FB" />
-        <SolidColorBrush x:Key="AccentPressedBrush" Color="#749EE8" />
-        <SolidColorBrush x:Key="TextPrimaryBrush" Color="#CDD6F4" />
-        <SolidColorBrush x:Key="TextMutedBrush" Color="#8B90A8" />
-        <SolidColorBrush x:Key="TextFaintBrush" Color="#5C6079" />
+        <SolidColorBrush x:Key="ThemeSurfaceBrush" Color="#1B1B29" />
+        <SolidColorBrush x:Key="ThemeCardBrush" Color="#232435" />
+        <SolidColorBrush x:Key="ThemeCardBorderBrush" Color="#33344A" />
+        <SolidColorBrush x:Key="ThemeElevatedBrush" Color="#2A2B3D" />
+        <SolidColorBrush x:Key="ThemeElevatedHoverBrush" Color="#363752" />
 
-        <!-- Subtle top-to-bottom gradient so card surfaces read as raised glass, not flat fill -->
-        <LinearGradientBrush x:Key="CardGradientBrush" StartPoint="0,0" EndPoint="0,1">
-            <GradientStop Color="#282A40" Offset="0" />
-            <GradientStop Color="#1F2032" Offset="1" />
-        </LinearGradientBrush>
+        <SolidColorBrush x:Key="ThemeAccentBrush" Color="#89B4FA" />
+        <SolidColorBrush x:Key="ThemeAccentHoverBrush" Color="#A5C6FB" />
+        <SolidColorBrush x:Key="ThemeAccentPressedBrush" Color="#749EE8" />
+        <SolidColorBrush x:Key="ThemeTabSelectedBrush" Color="#5589B4FA" />
 
-        <!-- Faint light-catching edge on the top-left of a card, like a glass bevel -->
-        <LinearGradientBrush x:Key="GlassEdgeBrush" StartPoint="0,0" EndPoint="1,1">
-            <GradientStop Color="#30FFFFFF" Offset="0" />
-            <GradientStop Color="#00FFFFFF" Offset="0.5" />
-        </LinearGradientBrush>
+        <SolidColorBrush x:Key="ThemeTextBrush" Color="#CDD6F4" />
+        <SolidColorBrush x:Key="ThemeMutedTextBrush" Color="#8B90A8" />
+        <SolidColorBrush x:Key="ThemeFaintTextBrush" Color="#5C6079" />
 
-        <!-- Standard soft elevation shadow shared by every card -->
-        <DropShadowEffect x:Key="CardShadow" Color="Black" Opacity="0.28" BlurRadius="18" ShadowDepth="4" Direction="270" />
+        <CornerRadius x:Key="ThemeCardRadius">20</CornerRadius>
+        <CornerRadius x:Key="ThemePanelRadius">26</CornerRadius>
+        <CornerRadius x:Key="ThemeFieldRadius">10</CornerRadius>
 
-        <!-- Glow used behind the accent play button -->
-        <DropShadowEffect x:Key="AccentGlow" Color="#89B4FA" Opacity="0.55" BlurRadius="24" ShadowDepth="0" />
+        <DropShadowEffect x:Key="ThemeCardShadow" Color="Black" Opacity="0.28" BlurRadius="18" ShadowDepth="4" Direction="270" />
 
-        <SolidColorBrush x:Key="TabSelectedBrush" Color="#3A3C57" />
+        <!-- ============ Structural styles — built from the live theme resources above ============ -->
 
         <Style x:Key="TabButtonStyle" TargetType="ToggleButton">
             <Setter Property="Padding" Value="18,9" />
             <Setter Property="Background" Value="Transparent" />
-            <Setter Property="Foreground" Value="#A6ADC8" />
+            <Setter Property="Foreground" Value="{DynamicResource ThemeMutedTextBrush}" />
             <Setter Property="BorderThickness" Value="0" />
             <Setter Property="FontSize" Value="12.5" />
             <Setter Property="FontWeight" Value="Medium" />
@@ -50,16 +46,16 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="ToggleButton">
-                        <Border x:Name="Bg" CornerRadius="18" Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}">
+                        <Border x:Name="Bg" CornerRadius="{DynamicResource ThemeFieldRadius}" Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}">
                             <ContentPresenter HorizontalAlignment="Center" />
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsChecked" Value="True">
-                                <Setter TargetName="Bg" Property="Background" Value="{StaticResource TabSelectedBrush}" />
-                                <Setter Property="Foreground" Value="#EDEFFC" />
+                                <Setter TargetName="Bg" Property="Background" Value="{DynamicResource ThemeTabSelectedBrush}" />
+                                <Setter Property="Foreground" Value="{DynamicResource ThemeTextBrush}" />
                             </Trigger>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="Bg" Property="Background" Value="#2A2B3D" />
+                                <Setter TargetName="Bg" Property="Background" Value="{DynamicResource ThemeElevatedBrush}" />
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -70,8 +66,8 @@
         <Style x:Key="RoundIconButton" TargetType="Button">
             <Setter Property="Width" Value="38" />
             <Setter Property="Height" Value="38" />
-            <Setter Property="Background" Value="{StaticResource ElevatedBrush}" />
-            <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}" />
+            <Setter Property="Background" Value="{DynamicResource ThemeElevatedBrush}" />
+            <Setter Property="Foreground" Value="{DynamicResource ThemeTextBrush}" />
             <Setter Property="BorderThickness" Value="0" />
             <Setter Property="FontFamily" Value="Segoe MDL2 Assets" />
             <Setter Property="FontSize" Value="12" />
@@ -84,10 +80,10 @@
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="Bg" Property="Background" Value="#363752" />
+                                <Setter TargetName="Bg" Property="Background" Value="{DynamicResource ThemeElevatedHoverBrush}" />
                             </Trigger>
                             <Trigger Property="IsPressed" Value="True">
-                                <Setter TargetName="Bg" Property="Background" Value="#45475A" />
+                                <Setter TargetName="Bg" Property="Background" Value="{DynamicResource ThemeAccentPressedBrush}" />
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -95,18 +91,12 @@
             </Setter>
         </Style>
 
-        <LinearGradientBrush x:Key="AccentGradientBrush" StartPoint="0,0" EndPoint="0,1">
-            <GradientStop Color="#A5C6FB" Offset="0" />
-            <GradientStop Color="#89B4FA" Offset="1" />
-        </LinearGradientBrush>
-
         <Style x:Key="PlayButton" TargetType="Button" BasedOn="{StaticResource RoundIconButton}">
             <Setter Property="Width" Value="54" />
             <Setter Property="Height" Value="54" />
-            <Setter Property="Background" Value="{StaticResource AccentGradientBrush}" />
-            <Setter Property="Foreground" Value="{StaticResource SurfaceBrush}" />
+            <Setter Property="Background" Value="{DynamicResource ThemeAccentBrush}" />
+            <Setter Property="Foreground" Value="{DynamicResource ThemeSurfaceBrush}" />
             <Setter Property="FontSize" Value="16" />
-            <Setter Property="Effect" Value="{StaticResource AccentGlow}" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
@@ -115,10 +105,10 @@
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="Bg" Property="Background" Value="{StaticResource AccentHoverBrush}" />
+                                <Setter TargetName="Bg" Property="Background" Value="{DynamicResource ThemeAccentHoverBrush}" />
                             </Trigger>
                             <Trigger Property="IsPressed" Value="True">
-                                <Setter TargetName="Bg" Property="Background" Value="{StaticResource AccentPressedBrush}" />
+                                <Setter TargetName="Bg" Property="Background" Value="{DynamicResource ThemeAccentPressedBrush}" />
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -132,14 +122,14 @@
             <Setter Property="Width" Value="30" />
             <Setter Property="Height" Value="30" />
             <Setter Property="Background" Value="Transparent" />
-            <Setter Property="Foreground" Value="{StaticResource TextMutedBrush}" />
+            <Setter Property="Foreground" Value="{DynamicResource ThemeMutedTextBrush}" />
         </Style>
 
         <Style x:Key="ToggleIconButton" TargetType="ToggleButton">
             <Setter Property="Width" Value="34" />
             <Setter Property="Height" Value="34" />
             <Setter Property="Background" Value="Transparent" />
-            <Setter Property="Foreground" Value="{StaticResource TextMutedBrush}" />
+            <Setter Property="Foreground" Value="{DynamicResource ThemeMutedTextBrush}" />
             <Setter Property="BorderThickness" Value="0" />
             <Setter Property="FontFamily" Value="Segoe MDL2 Assets" />
             <Setter Property="FontSize" Value="12" />
@@ -152,11 +142,11 @@
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsChecked" Value="True">
-                                <Setter TargetName="Bg" Property="Background" Value="#313244" />
-                                <Setter Property="Foreground" Value="{StaticResource AccentBrush}" />
+                                <Setter TargetName="Bg" Property="Background" Value="{DynamicResource ThemeElevatedBrush}" />
+                                <Setter Property="Foreground" Value="{DynamicResource ThemeAccentBrush}" />
                             </Trigger>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="Bg" Property="Background" Value="{StaticResource ElevatedBrush}" />
+                                <Setter TargetName="Bg" Property="Background" Value="{DynamicResource ThemeElevatedBrush}" />
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -165,17 +155,17 @@
         </Style>
 
         <Style x:Key="CardStyle" TargetType="Border">
-            <Setter Property="Background" Value="{StaticResource CardGradientBrush}" />
-            <Setter Property="CornerRadius" Value="20" />
+            <Setter Property="Background" Value="{DynamicResource ThemeCardBrush}" />
+            <Setter Property="CornerRadius" Value="{DynamicResource ThemeCardRadius}" />
             <Setter Property="Padding" Value="16" />
             <Setter Property="BorderThickness" Value="1" />
-            <Setter Property="BorderBrush" Value="{StaticResource GlassEdgeBrush}" />
-            <Setter Property="Effect" Value="{StaticResource CardShadow}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource ThemeCardBorderBrush}" />
+            <Setter Property="Effect" Value="{DynamicResource ThemeCardShadow}" />
         </Style>
 
         <Style x:Key="CaptionLabel" TargetType="TextBlock">
             <Setter Property="FontSize" Value="10.5" />
-            <Setter Property="Foreground" Value="{StaticResource TextFaintBrush}" />
+            <Setter Property="Foreground" Value="{DynamicResource ThemeFaintTextBrush}" />
             <Setter Property="FontWeight" Value="SemiBold" />
             <Setter Property="HorizontalAlignment" Value="Center" />
         </Style>
@@ -183,16 +173,16 @@
         <!-- Section header used in Settings ("HOTKEY", "THEME", etc.) -->
         <Style x:Key="SectionLabel" TargetType="TextBlock">
             <Setter Property="FontSize" Value="11" />
-            <Setter Property="Foreground" Value="{StaticResource TextMutedBrush}" />
+            <Setter Property="Foreground" Value="{DynamicResource ThemeMutedTextBrush}" />
             <Setter Property="FontWeight" Value="SemiBold" />
             <Setter Property="Margin" Value="2,0,0,8" />
         </Style>
 
         <!-- Rounded dark text field, replaces the flat gray boxes -->
         <Style x:Key="FieldTextBox" TargetType="TextBox">
-            <Setter Property="Background" Value="{StaticResource ElevatedBrush}" />
-            <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}" />
-            <Setter Property="CaretBrush" Value="{StaticResource TextPrimaryBrush}" />
+            <Setter Property="Background" Value="{DynamicResource ThemeElevatedBrush}" />
+            <Setter Property="Foreground" Value="{DynamicResource ThemeTextBrush}" />
+            <Setter Property="CaretBrush" Value="{DynamicResource ThemeTextBrush}" />
             <Setter Property="BorderThickness" Value="1" />
             <Setter Property="BorderBrush" Value="Transparent" />
             <Setter Property="Padding" Value="10,8" />
@@ -200,16 +190,16 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="TextBox">
-                        <Border x:Name="Bg" CornerRadius="10" Background="{TemplateBinding Background}"
+                        <Border x:Name="Bg" CornerRadius="{DynamicResource ThemeFieldRadius}" Background="{TemplateBinding Background}"
                                 BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
                             <ScrollViewer x:Name="PART_ContentHost" Margin="{TemplateBinding Padding}" VerticalAlignment="Center" />
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsFocused" Value="True">
-                                <Setter TargetName="Bg" Property="BorderBrush" Value="{StaticResource AccentBrush}" />
+                                <Setter TargetName="Bg" Property="BorderBrush" Value="{DynamicResource ThemeAccentBrush}" />
                             </Trigger>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="Bg" Property="Background" Value="#313244" />
+                                <Setter TargetName="Bg" Property="Background" Value="{DynamicResource ThemeElevatedHoverBrush}" />
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -219,7 +209,7 @@
 
         <!-- Custom rounded checkbox — accent fill when checked -->
         <Style x:Key="FieldCheckBox" TargetType="CheckBox">
-            <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}" />
+            <Setter Property="Foreground" Value="{DynamicResource ThemeTextBrush}" />
             <Setter Property="FontSize" Value="13" />
             <Setter Property="Cursor" Value="Hand" />
             <Setter Property="Template">
@@ -227,18 +217,18 @@
                     <ControlTemplate TargetType="CheckBox">
                         <StackPanel Orientation="Horizontal">
                             <Border x:Name="Box" Width="20" Height="20" CornerRadius="6"
-                                    Background="{StaticResource ElevatedBrush}" BorderThickness="1" BorderBrush="#3A3C57"
+                                    Background="{DynamicResource ThemeElevatedBrush}" BorderThickness="1" BorderBrush="{DynamicResource ThemeCardBorderBrush}"
                                     VerticalAlignment="Center">
                                 <TextBlock x:Name="Check" Text="&#xE73E;" FontFamily="Segoe MDL2 Assets" FontSize="12"
-                                           Foreground="{StaticResource SurfaceBrush}" HorizontalAlignment="Center"
+                                           Foreground="{DynamicResource ThemeSurfaceBrush}" HorizontalAlignment="Center"
                                            VerticalAlignment="Center" Opacity="0" />
                             </Border>
                             <ContentPresenter Margin="10,0,0,0" VerticalAlignment="Center" />
                         </StackPanel>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsChecked" Value="True">
-                                <Setter TargetName="Box" Property="Background" Value="{StaticResource AccentBrush}" />
-                                <Setter TargetName="Box" Property="BorderBrush" Value="{StaticResource AccentBrush}" />
+                                <Setter TargetName="Box" Property="Background" Value="{DynamicResource ThemeAccentBrush}" />
+                                <Setter TargetName="Box" Property="BorderBrush" Value="{DynamicResource ThemeAccentBrush}" />
                                 <Setter TargetName="Check" Property="Opacity" Value="1" />
                             </Trigger>
                         </ControlTemplate.Triggers>
@@ -249,8 +239,8 @@
 
         <!-- Primary accent action button (Save) -->
         <Style x:Key="PrimaryButton" TargetType="Button">
-            <Setter Property="Background" Value="{StaticResource AccentBrush}" />
-            <Setter Property="Foreground" Value="{StaticResource SurfaceBrush}" />
+            <Setter Property="Background" Value="{DynamicResource ThemeAccentBrush}" />
+            <Setter Property="Foreground" Value="{DynamicResource ThemeSurfaceBrush}" />
             <Setter Property="FontWeight" Value="SemiBold" />
             <Setter Property="FontSize" Value="13" />
             <Setter Property="BorderThickness" Value="0" />
@@ -259,15 +249,15 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
-                        <Border x:Name="Bg" CornerRadius="12" Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}">
+                        <Border x:Name="Bg" CornerRadius="{DynamicResource ThemeFieldRadius}" Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}">
                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="Bg" Property="Background" Value="{StaticResource AccentHoverBrush}" />
+                                <Setter TargetName="Bg" Property="Background" Value="{DynamicResource ThemeAccentHoverBrush}" />
                             </Trigger>
                             <Trigger Property="IsPressed" Value="True">
-                                <Setter TargetName="Bg" Property="Background" Value="{StaticResource AccentPressedBrush}" />
+                                <Setter TargetName="Bg" Property="Background" Value="{DynamicResource ThemeAccentPressedBrush}" />
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -277,8 +267,8 @@
 
         <!-- Secondary action button (Browse…) -->
         <Style x:Key="SecondaryButton" TargetType="Button">
-            <Setter Property="Background" Value="{StaticResource ElevatedBrush}" />
-            <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}" />
+            <Setter Property="Background" Value="{DynamicResource ThemeElevatedBrush}" />
+            <Setter Property="Foreground" Value="{DynamicResource ThemeTextBrush}" />
             <Setter Property="FontSize" Value="12.5" />
             <Setter Property="BorderThickness" Value="0" />
             <Setter Property="Padding" Value="14,8" />
@@ -286,12 +276,12 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
-                        <Border x:Name="Bg" CornerRadius="10" Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}">
+                        <Border x:Name="Bg" CornerRadius="{DynamicResource ThemeFieldRadius}" Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}">
                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="Bg" Property="Background" Value="#363752" />
+                                <Setter TargetName="Bg" Property="Background" Value="{DynamicResource ThemeElevatedHoverBrush}" />
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>

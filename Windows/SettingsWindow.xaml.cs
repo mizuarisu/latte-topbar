@@ -1,5 +1,6 @@
 using System.Globalization;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using Microsoft.Win32;
 using TopBar.Helpers;
@@ -12,6 +13,7 @@ public partial class SettingsWindow : Window
     private readonly SettingsService _settings;
     private readonly HotkeyService _hotkey;
     private string _capturedKey;
+    private bool _initialized;
 
     public SettingsWindow(SettingsService settings, HotkeyService hotkey)
     {
@@ -21,12 +23,15 @@ public partial class SettingsWindow : Window
         _capturedKey = _settings.Current.HotkeyKey;
 
         var s = _settings.Current;
-        RootBorder.Background = ColorUtils.VerticalDepthGradient(ColorUtils.Parse(s.MainColor));
         HotkeyBox.Text = $"Alt + {_capturedKey}";
         AutoStartCheck.IsChecked = s.AutoStart;
         MainColorBox.Text = s.MainColor;
         SecondaryColorBox.Text = s.SecondaryColor;
         TertiaryColorBox.Text = s.TertiaryColor;
+        TextColorBox.Text = s.TextColor;
+        CornerRadiusSlider.Value = s.CornerRadius;
+        CornerRadiusLabel.Text = $"{s.CornerRadius:0}px";
+        ShadowCheck.IsChecked = s.ShadowEnabled;
         PfpPathBox.Text = s.ProfilePicturePath ?? "";
         WeatherLabelBox.Text = s.WeatherLabel;
         // Invariant culture explicitly — otherwise this renders with a comma decimal
@@ -34,6 +39,28 @@ public partial class SettingsWindow : Window
         LatBox.Text = s.WeatherLat.ToString("0.####", CultureInfo.InvariantCulture);
         LonBox.Text = s.WeatherLon.ToString("0.####", CultureInfo.InvariantCulture);
         FahrenheitCheck.IsChecked = s.WeatherFahrenheit;
+
+        _initialized = true; // now that fields are populated, live-preview handlers are safe to fire
+    }
+
+    // ---------- Live preview: every edit below pushes straight to the app's live theme
+    // resources, so the whole app (including this window) reflects it instantly — nothing
+    // is persisted to disk until Save is clicked. ----------
+
+    private void OnLiveThemeChanged(object sender, RoutedEventArgs e) => PushLivePreview();
+
+    private void OnCornerRadiusChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+    {
+        if (CornerRadiusLabel is not null) CornerRadiusLabel.Text = $"{e.NewValue:0}px";
+        PushLivePreview();
+    }
+
+    private void PushLivePreview()
+    {
+        if (!_initialized) return; // don't fire while InitializeComponent is still setting up fields
+        ThemeApplier.Apply(
+            MainColorBox.Text, SecondaryColorBox.Text, TertiaryColorBox.Text, TextColorBox.Text,
+            CornerRadiusSlider.Value, ShadowCheck.IsChecked == true);
     }
 
     private void OnHeaderDrag(object sender, MouseButtonEventArgs e)
@@ -41,7 +68,11 @@ public partial class SettingsWindow : Window
         if (e.LeftButton == MouseButtonState.Pressed) DragMove();
     }
 
-    private void OnCancel(object sender, RoutedEventArgs e) => Close();
+    private void OnCancel(object sender, RoutedEventArgs e)
+    {
+        ThemeApplier.Apply(_settings.Current); // discard unsaved live-preview edits
+        Close();
+    }
 
     private void OnHotkeyPreviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
     {
@@ -75,6 +106,9 @@ public partial class SettingsWindow : Window
         s.MainColor = MainColorBox.Text.Trim();
         s.SecondaryColor = SecondaryColorBox.Text.Trim();
         s.TertiaryColor = TertiaryColorBox.Text.Trim();
+        s.TextColor = TextColorBox.Text.Trim();
+        s.CornerRadius = CornerRadiusSlider.Value;
+        s.ShadowEnabled = ShadowCheck.IsChecked == true;
         s.ProfilePicturePath = string.IsNullOrWhiteSpace(PfpPathBox.Text) ? null : PfpPathBox.Text.Trim();
         s.WeatherLabel = WeatherLabelBox.Text.Trim();
 
@@ -82,7 +116,8 @@ public partial class SettingsWindow : Window
         if (double.TryParse(LonBox.Text, NumberStyles.Float, CultureInfo.InvariantCulture, out var lon)) s.WeatherLon = lon;
         s.WeatherFahrenheit = FahrenheitCheck.IsChecked == true;
 
-        _settings.Save(); // raises SettingsChanged, which the panel listens to for live theme refresh
+        _settings.Save(); // raises SettingsChanged, which the panel listens to for the pfp refresh
+        ThemeApplier.Apply(s); // idempotent — already live via preview, this just makes it official
 
         AutoStartService.SetEnabled(s.AutoStart);
 

@@ -121,7 +121,7 @@ public partial class PanelWindow : Window
     private void ApplyTheme()
     {
         var s = _settings.Current;
-        RootBorder.Background = ColorUtils.VerticalDepthGradient(ColorUtils.Parse(s.MainColor));
+        ThemeApplier.Apply(s);
 
         if (!string.IsNullOrEmpty(s.ProfilePicturePath) && System.IO.File.Exists(s.ProfilePicturePath))
         {

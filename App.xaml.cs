@@ -20,6 +20,7 @@ public partial class App : System.Windows.Application
         ShutdownMode = ShutdownMode.OnExplicitShutdown; // no bar/panel is a "main window" to close on
 
         _settingsService.Load();
+        Helpers.ThemeApplier.Apply(_settingsService.Current);
 
         // A true message-only window (HWND_MESSAGE) purely to receive WM_HOTKEY —
         // this must never become a real overlapped window or Windows draws chrome for it.
