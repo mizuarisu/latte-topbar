@@ -36,6 +36,7 @@ internal static class ThemeApplier
         app.Resources["ThemeAccentHoverBrush"] = new SolidColorBrush(ColorUtils.Lighten(accent, 0.15));
         app.Resources["ThemeAccentPressedBrush"] = new SolidColorBrush(ColorUtils.Darken(accent, 0.15));
         app.Resources["ThemeTabSelectedBrush"] = new SolidColorBrush(System.Windows.Media.Color.FromArgb(0x55, accent.R, accent.G, accent.B));
+        app.Resources["ThemeAccentSoftBrush"] = new SolidColorBrush(System.Windows.Media.Color.FromArgb(0x2A, accent.R, accent.G, accent.B));
 
         app.Resources["ThemeTextBrush"] = new SolidColorBrush(text);
         app.Resources["ThemeMutedTextBrush"] = new SolidColorBrush(ColorUtils.Darken(text, 0.35));

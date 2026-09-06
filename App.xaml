@@ -21,6 +21,7 @@
         <SolidColorBrush x:Key="ThemeAccentHoverBrush" Color="#A5C6FB" />
         <SolidColorBrush x:Key="ThemeAccentPressedBrush" Color="#749EE8" />
         <SolidColorBrush x:Key="ThemeTabSelectedBrush" Color="#5589B4FA" />
+        <SolidColorBrush x:Key="ThemeAccentSoftBrush" Color="#2A89B4FA" />
 
         <SolidColorBrush x:Key="ThemeTextBrush" Color="#CDD6F4" />
         <SolidColorBrush x:Key="ThemeMutedTextBrush" Color="#8B90A8" />
@@ -164,6 +165,19 @@
             <Setter Property="BorderThickness" Value="1" />
             <Setter Property="BorderBrush" Value="{DynamicResource ThemeCardBorderBrush}" />
             <Setter Property="Effect" Value="{DynamicResource ThemeCardShadow}" />
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="{DynamicResource ThemeElevatedHoverBrush}" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- Small circular icon badge — accent-tinted backdrop behind a glyph, the "widget icon" pattern -->
+        <Style x:Key="IconBadge" TargetType="Border">
+            <Setter Property="Width" Value="40" />
+            <Setter Property="Height" Value="40" />
+            <Setter Property="CornerRadius" Value="14" />
+            <Setter Property="Background" Value="{DynamicResource ThemeAccentSoftBrush}" />
         </Style>
 
         <Style x:Key="CaptionLabel" TargetType="TextBlock">
